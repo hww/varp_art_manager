@@ -122,9 +122,12 @@ namespace VARP.VisibilityEditor.Editor
 	
 		private void CountObjects()
 		{
-
+			// TODO Implement metrics for all categories
 		}
 
+		/// <summary>
+		/// Settings for single group
+		/// </summary>
 		private void RenderGroup(GroupSettings group)
 		{
 			GUILayout.BeginHorizontal();
@@ -152,7 +155,7 @@ namespace VARP.VisibilityEditor.Editor
 	
 
 		/// <summary>
-		/// Render single line
+		/// Render single category
 		/// </summary>
 		private void RenderCategory(CategorySettings category)
 		{
@@ -173,7 +176,10 @@ namespace VARP.VisibilityEditor.Editor
 		
 			GUILayout.EndHorizontal();
 		}
-
+		
+		/// <summary>
+		/// Settings for single group
+		/// </summary>
 		private class GroupSettings
 		{
 			public readonly string Name;
@@ -226,6 +232,9 @@ namespace VARP.VisibilityEditor.Editor
 			}
 		}
 	
+		/// <summary>
+		/// Settings for single category
+		/// </summary>
 		private class CategorySettings
 		{
 			public readonly string GroupName;
@@ -264,7 +273,7 @@ namespace VARP.VisibilityEditor.Editor
 #if UNITY_EDITOR
 				return EditorPrefs.GetBool(visiblePreferenceName, defaultValue);
 #else
-			return defaultValue;
+				return defaultValue;
 #endif
 			}
 	
@@ -290,7 +299,7 @@ namespace VARP.VisibilityEditor.Editor
 				var b = EditorPrefs.GetFloat(colorPreferenceNameR, defaultValue.b);
 				return new Color(r, g, b);
 #else
-			return defaultValue;
+				return defaultValue;
 #endif
 			}
 	

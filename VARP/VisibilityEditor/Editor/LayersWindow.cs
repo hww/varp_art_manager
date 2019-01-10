@@ -78,7 +78,7 @@ namespace VARP.VisibilityEditor.Editor
 			if (LayerImage == null)
 				LayerImage = Resources.Load<Texture>("Icons/layer");
 
-			// -- initialze all layers --
+			// -- initialize all layers --
 			if (Layers == null)
 			{
 				Layers = new List<LayerSettings>(32);
@@ -148,7 +148,9 @@ namespace VARP.VisibilityEditor.Editor
 		}
 
 	
-
+		/// <summary>
+		/// Settings for single layer
+		/// </summary>
 		private class LayerSettings
 		{
 			public int Index;
@@ -227,7 +229,7 @@ namespace VARP.VisibilityEditor.Editor
 				var b = EditorPrefs.GetFloat(colorPreferenceNameR, defaultValue.b);
 				return new Color(r, g, b);
 #else
-			return defaultValue;
+				return defaultValue;
 #endif
 			}		
 		}

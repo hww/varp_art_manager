@@ -4,8 +4,8 @@ Simple Unity editor extension for managing visibility of layers and categories o
 
 ## Edit Layers Visibility
 
-![Layers Window](/doc/layers_window.png)
+![Layers Window](/Documentation/layers_window.png)
 
 ## Edit Categories Visibility
 
-![Categories Window](/doc/categories_window.png)
+![Categories Window](/Documentation/categories_window.png)

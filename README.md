@@ -14,6 +14,10 @@ The pannel alow makes visible or invisible category (or group of categories). Ad
 
 ![Categories Window](/Documentation/categories_window.png)
 
+## Change Layer Names
+
+The enum value EGameLayer contains the names for all layers in your game.
+
 ## Access to categories settings
 
 For each group static field in the GameGroups class.

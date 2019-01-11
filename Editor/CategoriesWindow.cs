@@ -48,12 +48,12 @@ namespace VARP.VisibilityEditor.Editor
 		private readonly GUILayoutOption QuantityWidthOption = GUILayout.Width(50);
 		private readonly GUILayoutOption ColorWidthOption = GUILayout.Width(50);
 
-		private GroupSettings CameraGroup;
-		private GroupSettings PartilesGroup;
-		private GroupSettings SoundsGroup;
-		private GroupSettings GlobalsGroup;
-		private GroupSettings RenderingGroup;
-		private GroupSettings GameplayGroup;
+		private GroupView CameraGroup;
+		private GroupView PartilesGroup;
+		private GroupView SoundsGroup;
+		private GroupView GlobalsGroup;
+		private GroupView RenderingGroup;
+		private GroupView GameplayGroup;
 		private GUIStyle ButtonStyle;
 	
 		void OnGUI ()
@@ -71,46 +71,17 @@ namespace VARP.VisibilityEditor.Editor
 				InvisibleIcon = Resources.Load<Texture>("Icons/invisible");
 		
 			if (GlobalsGroup == null)
-			{
-				GlobalsGroup = new GroupSettings("Global", "Icons/envBall");
-				GlobalsGroup.CreateCategory("FeatureOverlays", "Icons/overlay", Color.white);
-				GlobalsGroup.CreateCategory("NavShapes", "Icons/navigation", Color.white);
-				GlobalsGroup.CreateCategory("Traversal", "Icons/actor", Color.white);
-			}
+				GlobalsGroup = new GroupView(GameGroups.Globals, "Icons/envBall");
 			if (GameplayGroup == null)
-			{
-				GameplayGroup = new GroupSettings("Gameplay", "Icons/pacman");
-				GameplayGroup.CreateCategory("ActorsSpawners", "Icons/actor", Color.white);
-				GameplayGroup.CreateCategory("Regions", "Icons/region", Color.white);
-				GameplayGroup.CreateCategory("Splines", "Icons/spline", Color.white);
-			}
+				GameplayGroup = new GroupView(GameGroups.Gameplay, "Icons/pacman");
 			if (CameraGroup == null)
-			{
-				CameraGroup = new GroupSettings("Camera", "Icons/camera");
-				CameraGroup.CreateCategory("ActorsSpawners", "Icons/actor", Color.white);
-				CameraGroup.CreateCategory("Regions", "Icons/region", Color.white);
-				CameraGroup.CreateCategory("Splines", "Icons/spline", Color.white);
-			}
+				CameraGroup = new GroupView(GameGroups.Camera, "Icons/camera");
 			if (SoundsGroup == null)
-			{
-				SoundsGroup = new GroupSettings("Sounds", "Icons/sound");
-				SoundsGroup.CreateCategory("ActorsSpawners", "Icons/actor", Color.white);
-				SoundsGroup.CreateCategory("Regions", "Icons/region", Color.white);
-				SoundsGroup.CreateCategory("Splines", "Icons/spline", Color.white);
-			}
+				SoundsGroup = new GroupView(GameGroups.Sounds, "Icons/sound");
 			if (RenderingGroup == null)
-			{
-				RenderingGroup = new GroupSettings("Rendering", "Icons/rendering");
-				RenderingGroup.CreateCategory("ActorsSpawners", "Icons/actor", Color.white);
-				RenderingGroup.CreateCategory("Regions", "Icons/region", Color.white);
-			}
+				RenderingGroup = new GroupView(GameGroups.Rendering, "Icons/rendering");
 			if (PartilesGroup == null)
-			{
-				PartilesGroup = new GroupSettings("Particles", "Icons/particle");
-				PartilesGroup.CreateCategory("ActorsSpawners", "Icons/actor", Color.white);
-				PartilesGroup.CreateCategory("Regions", "Icons/region", Color.white);
-				PartilesGroup.CreateCategory("Splines", "Icons/spline", Color.white);
-			}
+				PartilesGroup = new GroupView(GameGroups.Partiles, "Icons/particle");
 
 			RenderGroup(GlobalsGroup);
 			RenderGroup(GameplayGroup);
@@ -128,11 +99,12 @@ namespace VARP.VisibilityEditor.Editor
 		/// <summary>
 		/// Settings for single group
 		/// </summary>
-		private void RenderGroup(GroupSettings group)
+		private void RenderGroup(GroupView groupView)
 		{
+			var group = groupView.GameGroup;
 			GUILayout.BeginHorizontal();
 			// -- 0 ---------------------------------------------------
-			GUILayout.Box(group.Icon, ButtonStyle, IconWidthOption, IconHeightOption);
+			GUILayout.Box(groupView.Icon, ButtonStyle, IconWidthOption, IconHeightOption);
 			// -- 1 ---------------------------------------------------
 			var isVisible = group.IsVisible;
 			if (GUILayout.Button( isVisible ? VisibleIcon : InvisibleIcon, ButtonStyle, IconWidthOption, IconHeightOption))
@@ -145,7 +117,7 @@ namespace VARP.VisibilityEditor.Editor
 			GUILayout.Label(group.Quantity.ToString(), EditorStyles.boldLabel, QuantityWidthOption);
 			GUILayout.EndHorizontal();
 
-			var categories = group.Categories;
+			var categories = groupView.Categories;
 			var count = categories.Count;
 			for (var i=0; i<count; i++)
 				RenderCategory(categories[i]);
@@ -157,8 +129,9 @@ namespace VARP.VisibilityEditor.Editor
 		/// <summary>
 		/// Render single category
 		/// </summary>
-		private void RenderCategory(CategorySettings category)
+		private void RenderCategory(CategoryView categoryView)
 		{
+			var category = categoryView.Category;
 			var isVisible = category.IsVisible;
 
 			GUILayout.BeginHorizontal();
@@ -168,7 +141,7 @@ namespace VARP.VisibilityEditor.Editor
 			if (GUILayout.Button(category.IsVisible ? VisibleIcon : InvisibleIcon, ButtonStyle, IconWidthOption, IconHeightOption))
 				category.IsVisible = !category.IsVisible;
 			// -- 2 ---------------------------------------------------
-			GUILayout.Box(category.Icon, ButtonStyle, IconWidthOption, IconHeightOption);
+			GUILayout.Box(categoryView.Icon, ButtonStyle, IconWidthOption, IconHeightOption);
 			// -- 3 ---------------------------------------------------
 			GUILayout.Label(category.Name, EditorStyles.largeLabel);
 			// -- 4 ---------------------------------------------------
@@ -176,141 +149,55 @@ namespace VARP.VisibilityEditor.Editor
 		
 			GUILayout.EndHorizontal();
 		}
-		
-		/// <summary>
-		/// Settings for single group
-		/// </summary>
-		private class GroupSettings
+	}
+
+	/// <summary>
+	/// Interface to the GroupSettings
+	/// </summary>
+	public class GroupView
+	{
+		public readonly Texture Icon;
+		public readonly List<CategoryView> Categories = new List<CategoryView>();
+		public readonly GameGroup GameGroup;
+		public GroupView(GameGroup gameGroup, string iconName)
 		{
-			public readonly string Name;
-			public readonly Texture Icon;
-			public readonly List<CategorySettings> Categories = new List<CategorySettings>();
-		
-			public GroupSettings(string name, string iconName)
-			{
-				Name = name;
-				Icon = Resources.Load<Texture>(iconName);
-			}
-
-			public CategorySettings CreateCategory(string name, string iconName, Color defaultColor)
-			{
-				var category = new CategorySettings(Name, name, iconName, defaultColor);
-				Categories.Add(category);
-				return category;
-			}
-
-			public int Quantity
-			{
-				get
-				{
-					var quantity = 0;
-					var count = Categories.Count;
-					for (var i = 0; i < count; i++)
-						quantity += Categories[i].Quantity;
-					return quantity;
-				}	
-			}
-			public bool IsVisible
-			{
-				get
-				{
-					var count = Categories.Count;
-					for (var i = 0; i < count; i++)
-					{
-						var category = Categories[i];
-						if (category.IsVisible)
-							return true;
-					}
-					return false;
-				}
-				set
-				{
-					var count = Categories.Count;
-					for (var i = 0; i < count; i++)
-						Categories[i].IsVisible = value;
-				}
-			}
+			Debug.Assert(gameGroup != null);
+			GameGroup = gameGroup;
+			Icon = Resources.Load<Texture>(iconName);
+			
+			if (gameGroup.FeatureOverlays != null)
+				CreateCategoryView(gameGroup.FeatureOverlays, "Icons/overlay");
+			if (gameGroup.NavShapes != null)
+				CreateCategoryView(gameGroup.NavShapes, "Icons/navigation");
+			if (gameGroup.Traversal != null)
+				CreateCategoryView(gameGroup.Traversal, "Icons/actor");
+			if (gameGroup.ActorsSpawners != null)
+				CreateCategoryView(gameGroup.ActorsSpawners, "Icons/actor");
+			if (gameGroup.Regions != null)
+				CreateCategoryView(gameGroup.Regions, "Icons/region");
+			if (gameGroup.Splines != null)
+				CreateCategoryView(gameGroup.Splines, "Icons/spline");
 		}
-	
-		/// <summary>
-		/// Settings for single category
-		/// </summary>
-		private class CategorySettings
+
+		public void CreateCategoryView(Category category, string iconName)
 		{
-			public readonly string GroupName;
-			public readonly string Name;
-			public readonly Texture Icon;
+			Debug.Assert(category != null);
+			Categories.Add(new CategoryView(category, iconName));
+		}
+	}
 
-			public int Quantity;
-
-			private readonly string visiblePreferenceName;
-			private readonly string colorPreferenceNameR;
-			private readonly string colorPreferenceNameG;
-			private readonly string colorPreferenceNameB;
-		
-			public CategorySettings(string groupName, string name, string iconName, Color defaultColor)
-			{
-				GroupName = groupName;
-				Name = name;
-				Icon = Resources.Load<Texture>(iconName);
-				visiblePreferenceName = "CategoriesWindowVisible" + groupName + name;
-				colorPreferenceNameR = "CategoriesWindowColorR" + groupName + name;
-				colorPreferenceNameG = "CategoriesWindowColorG" + groupName + name;
-				colorPreferenceNameB = "CategoriesWindowColorB" + groupName + name;
-				isVisible = GetVisibleInternal(true);
-				color = GetColorInternal(defaultColor);
-			}
-
-			private bool isVisible;
-			public bool IsVisible
-			{
-				get { return isVisible; }
-				set { isVisible = value; SetVisibleInternal(value); }
-			}
-		
-			private bool GetVisibleInternal(bool defaultValue)
-			{
-#if UNITY_EDITOR
-				return EditorPrefs.GetBool(visiblePreferenceName, defaultValue);
-#else
-				return defaultValue;
-#endif
-			}
-	
-			private void SetVisibleInternal(bool value)
-			{
-#if UNITY_EDITOR
-				EditorPrefs.SetBool(visiblePreferenceName, value);
-#endif
-			}
-
-			private Color color;
-			public Color Color
-			{
-				get { return color; }
-				set { color = value; SetColorInternal(value); }
-			}
-		
-			private Color GetColorInternal(Color defaultValue)
-			{
-#if UNITY_EDITOR
-				var r = EditorPrefs.GetFloat(colorPreferenceNameR, defaultValue.r);
-				var g = EditorPrefs.GetFloat(colorPreferenceNameR, defaultValue.g);
-				var b = EditorPrefs.GetFloat(colorPreferenceNameR, defaultValue.b);
-				return new Color(r, g, b);
-#else
-				return defaultValue;
-#endif
-			}
-	
-			private void SetColorInternal(Color value)
-			{
-#if UNITY_EDITOR
-				EditorPrefs.SetFloat(colorPreferenceNameR, value.r);
-				EditorPrefs.SetFloat(colorPreferenceNameG, value.g);
-				EditorPrefs.SetFloat(colorPreferenceNameB, value.b);
-#endif
-			}
+	/// <summary>
+	/// Interface to the CategorySettings
+	/// </summary>
+	public  class CategoryView
+	{
+		public readonly Texture Icon;
+		public readonly Category Category;
+		public CategoryView(Category category, string iconName)
+		{
+			Debug.Assert(category != null);
+			Category = category;
+			Icon = Resources.Load<Texture>(iconName);
 		}
 	}
 }

@@ -24,12 +24,13 @@
 
 using System;
 using System.Collections.Generic;
+using Plugins.VARP.VisibilityEditor;
 using UnityEditor;
 using UnityEngine;
 
 namespace VARP.VisibilityEditor.Editor
 {
-	public class LayersWindow : EditorWindow {
+	public partial class LayersWindow : EditorWindow {
 
 		[MenuItem("Window/Rocket/Layers")]
 		public static void ShowWindow ()
@@ -56,8 +57,8 @@ namespace VARP.VisibilityEditor.Editor
 		private readonly GUILayoutOption ColorWidthOption = GUILayout.Width(30);
 		private GUIStyle ButtonStyle;
 	
-		private List<LayerSettings> Layers;
-	
+		public static readonly LayerView[] LayerViews = new LayerView[32];
+		
 		void OnGUI ()
 		{
 			if (ButtonStyle == null)
@@ -79,26 +80,27 @@ namespace VARP.VisibilityEditor.Editor
 				LayerImage = Resources.Load<Texture>("Icons/layer");
 
 			// -- initialize all layers --
-			if (Layers == null)
+			var layers = GameLayers.Layers;
+			for (var i = 0; i < layers.Length; i++)
 			{
-				Layers = new List<LayerSettings>(32);
-				var layers = System.Enum.GetValues(typeof(EGameLayer));
-				foreach (var layer in layers)
-					Layers.Add(new LayerSettings((int)layer, layer.ToString(), "Icons/layer", Color.white));
-				CountObjects();
+				var layer = layers[i];
+				if (layer!=null)
+					LayerViews[i] = new LayerView(layer, "Icons/layer");
 			}
+			GameLayers.CountObjects();
 			// -- render tool bar --
 			GUILayout.BeginHorizontal();
 			if (GUILayout.Button("Count Objects"))
-				CountObjects();
+				GameLayers.CountObjects();
 			GUILayout.EndHorizontal();
 
 			EditorGUILayout.HelpBox("Reserved by Unity layers", MessageType.None);
 			// -- render layers --
-			var count = Layers.Count;
-			for (var i = 0; i < count; i++)
+			for (var i = 0; i < LayerViews.Length; i++)
 			{
-				RenderLayer(Layers[i]);
+				var layer = LayerViews[i];
+				if (layer!=null)
+					RenderLayer(layer);
 				// draw separator after unity default layers
 				if (i == 7)
 				{
@@ -108,25 +110,12 @@ namespace VARP.VisibilityEditor.Editor
 			}
 		}
 
-		private void CountObjects()
-		{
-			if (Layers == null) return;
-			var counts = LayerTools.CountObjectsInAllLayers();
-			var min = Math.Min(counts.Length, Layers.Count);
-			for (var i = 0; i < min; i++)
-			{
-				var layer = Layers[i];
-				if (layer != null)
-					layer.Quantity = counts[i];
-
-			}
-		}
-	
 		/// <summary>
 		/// Render single line
 		/// </summary>
-		private void RenderLayer(LayerSettings layer)
+		private void RenderLayer(LayerView layerView)
 		{
+			var layer = layerView.Layer;
 			GUILayout.BeginHorizontal();
 			// -- 1 ---------------------------------------------------
 			var isVisible = layer.IsVisible;
@@ -138,7 +127,7 @@ namespace VARP.VisibilityEditor.Editor
 			// -- 2 ---------------------------------------------------
 			layer.Color = EditorGUILayout.ColorField( layer.Color, ColorWidthOption);
 			// -- 3 ---------------------------------------------------
-			GUILayout.Box(layer.Icon, ButtonStyle, IconWidthOption, IconHeightOption);
+			GUILayout.Box(layerView.Icon, ButtonStyle, IconWidthOption, IconHeightOption);
 			// -- 4 ---------------------------------------------------
 			GUILayout.Label(layer.Name, EditorStyles.largeLabel);
 			// -- 5 ---------------------------------------------------
@@ -147,91 +136,19 @@ namespace VARP.VisibilityEditor.Editor
 			GUILayout.EndHorizontal();
 		}
 
-	
 		/// <summary>
-		/// Settings for single layer
+		/// Representation for single layer
 		/// </summary>
-		private class LayerSettings
+		public class LayerView
 		{
-			public int Index;
-			public int Mask;
-			public string Name;
 			public Texture Icon;
-
-			public int Quantity;
-
-			private readonly string colorPreferenceNameR;
-			private readonly string colorPreferenceNameG;
-			private readonly string colorPreferenceNameB;
-		
-			public LayerSettings(int index, string name, string iconName, Color defaultColor)
+			public GameLayer Layer;
+			
+			public LayerView(GameLayer layer, string iconName)
 			{
-				Name = name;
-				Index = index;
-				Mask = 1 << index;
+				Layer = layer;
 				Icon = Resources.Load<Texture>(iconName);
-
-				colorPreferenceNameR = "LayersWindowColorR" + name;
-				colorPreferenceNameG = "LayersWindowColorG" + name;
-				colorPreferenceNameB = "LayersWindowColorB" + name;
-				Color = GetColorInternal(defaultColor);
 			}
-		
-
-			public bool IsLocked
-			{
-				get => (Tools.lockedLayers & Mask) > 0;
-				set
-				{
-					if (value)
-						Tools.lockedLayers |= Mask;
-					else
-						Tools.lockedLayers &= ~Mask;
-				}
-			}
-		
-			public bool IsVisible
-			{
-				get => (Tools.visibleLayers & Mask) > 0;
-				set
-				{
-					var was = Tools.visibleLayers;
-
-					if (value)
-						Tools.visibleLayers |= Mask;
-					else
-						Tools.visibleLayers &= ~Mask;
-					if (was != Tools.visibleLayers)
-						SceneView.RepaintAll(); 
-				}
-			}
-		
-			private Color color;
-			public Color Color
-			{
-				get { return color; }
-				set { if (color != value) SetColorInternal(value); color = value; }
-			}
-		
-			private void SetColorInternal(Color value)
-			{
-#if UNITY_EDITOR
-				EditorPrefs.SetFloat(colorPreferenceNameR, value.r);
-				EditorPrefs.SetFloat(colorPreferenceNameG, value.g);
-				EditorPrefs.SetFloat(colorPreferenceNameB, value.b);
-#endif
-			}
-			private Color GetColorInternal(Color defaultValue)
-			{
-#if UNITY_EDITOR
-				var r = EditorPrefs.GetFloat(colorPreferenceNameR, defaultValue.r);
-				var g = EditorPrefs.GetFloat(colorPreferenceNameR, defaultValue.g);
-				var b = EditorPrefs.GetFloat(colorPreferenceNameR, defaultValue.b);
-				return new Color(r, g, b);
-#else
-				return defaultValue;
-#endif
-			}		
 		}
 	}
 }

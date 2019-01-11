@@ -40,6 +40,17 @@ public class GameGroup
 }
 ```
 
+Example of using
+
+```C#
+void OnDrawGizmos()
+{
+      var category = GameGroups.Gameplay.ActorSpawners;
+      if (category.IsVisible)
+            Gizmos.DrawBox(transform.position, Vector.one, category.Color);
+}
+```
+
 ## Access to layer settings
 
 The GameLayers class contains settings for layers

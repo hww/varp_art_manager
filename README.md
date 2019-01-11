@@ -4,9 +4,13 @@ Simple Unity editor extension for managing visibility of layers and categories o
 
 ## Edit Layers Visibility
 
+The pannel alow makes visible or invisible layers, also it can make layer protected or not. Additionaly it allow to change layer's color. And finaly it displays metrics per layer.
+
 ![Layers Window](/Documentation/layers_window.png)
 
 ## Edit Categories Visibility
+
+The pannel alow makes visible or invisible category (or group of categories). Additionaly it displays metrics per category.
 
 ![Categories Window](/Documentation/categories_window.png)
 

@@ -55,7 +55,6 @@ void OnDrawGizmos()
 
 The GameLayers class contains settings for layers
 
-
 ```C#
 public class GameGroup
 {
@@ -63,5 +62,6 @@ public class GameGroup
 }
 ```
 
+In most cases there are no resons access to the layes settings. The layers managed directly by unity UnityEditor. 
 
 

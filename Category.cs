@@ -1,7 +1,3 @@
-using UnityEditor;
-using UnityEngine;
-using VARP.OSC;
-
 // =============================================================================
 // MIT License
 // 
@@ -25,6 +21,10 @@ using VARP.OSC;
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 // =============================================================================
+
+using UnityEditor;
+using UnityEngine;
+using VARP.OSC;
 
 namespace VARP.VisibilityEditor
 {

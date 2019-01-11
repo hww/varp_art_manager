@@ -12,10 +12,10 @@ Simple Unity editor extension for managing visibility of layers and categories o
 
 ## Access to categories settings
 
-For each group static field in the Groups class.
+For each group static field in the GameGroups class.
 
 ```C#
-public class Groups
+public class GameGroups
 {
       public static Group Camera;
       public static Group Partiles;
@@ -29,7 +29,7 @@ public class Groups
 Each group has fields per each category.
 
 ```C#
-public class Group
+public class GameGroup
 {
       public Category ActorsSpawners;
       public Category Regions;
@@ -39,3 +39,18 @@ public class Group
       public Category Traversal;
 }
 ```
+
+## Access to layer settings
+
+The GameLayers class contains settings for layers
+
+
+```C#
+public class GameGroup
+{
+      public static readonly GameLayer[] Layers = new GameLayer[32];
+}
+```
+
+
+

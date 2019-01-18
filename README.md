@@ -23,7 +23,7 @@ The enum value EGameLayer contains the names for all layers in your game.
 For each group static field in the GameGroups class.
 
 ```C#
-public class GameGroups
+public class ArtGroups
 {
       public static Group Camera;
       public static Group Partiles;
@@ -37,7 +37,7 @@ public class GameGroups
 Each group has fields per each category.
 
 ```C#
-public class GameGroup
+public class ArtGroup
 {
       public Category ActorsSpawners;
       public Category Regions;
@@ -53,7 +53,7 @@ Example of using
 ```C#
 void OnDrawGizmos()
 {
-      var category = GameGroups.Gameplay.ActorSpawners;
+      var category = ArtGroups.Gameplay.ActorSpawners;
       if (category.IsVisible)
             Gizmos.DrawBox(transform.position, Vector.one, category.Color);
 }
@@ -64,7 +64,7 @@ void OnDrawGizmos()
 The GameLayers class contains settings for layers
 
 ```C#
-public class GameGroup
+public class ArtGroup
 {
       public static readonly GameLayer[] Layers = new GameLayer[32];
 }

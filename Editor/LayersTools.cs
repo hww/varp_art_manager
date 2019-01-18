@@ -26,10 +26,14 @@ using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 
-namespace VARP.VisibilityEditor
+namespace VARP.VisibilityEditor.Editor
 {
-    public static class LayerTools
+    public static class LayersTools
     {
+        // ====================================================================
+        // Statistics
+        // ====================================================================
+        
         public static int[] CountObjectsInAllLayers()
         {
             var counts = new int[32];
@@ -49,6 +53,10 @@ namespace VARP.VisibilityEditor
             return count;
         }
 
+        // ====================================================================
+        // Selecting
+        // ====================================================================
+        
         private static void SelectObjectsInLayer(int layerIndex)
         {
             var root = Resources.FindObjectsOfTypeAll<GameObject>();

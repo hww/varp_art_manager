@@ -22,49 +22,70 @@
 // SOFTWARE.
 // =============================================================================
 
+
 using UnityEngine;
+
 
 namespace VARP.VisibilityEditor
 {
-    public static class GameGroups
+    public static class ArtGroups
     {
-        public static GameGroup Camera;
-        public static GameGroup Partiles;
-        public static GameGroup Sounds;
-        public static GameGroup Globals;
-        public static GameGroup Rendering;
-        public static GameGroup Gameplay;
+        /// <summary>
+        /// Specialized for camera management
+        /// </summary>
+        public static ArtGroup Camera;
+        /// <summary>
+        /// Specialized for particles and effects management
+        /// </summary>
+        public static ArtGroup Particles;
+        /// <summary>
+        /// Specialized for sounds and listeners management
+        /// </summary>
+        public static ArtGroup Sounds;
+        /// <summary>
+        /// Not fit to any group
+        /// </summary>
+        public static ArtGroup Globals;
+        /// <summary>
+        /// Specialized for GUI, Rendering, Lighting, and PostFX 
+        /// </summary>
+        public static ArtGroup Rendering;
+        /// <summary>
+        /// Specialized for game play behaviour
+        /// </summary>
+        public static ArtGroup Gameplay;
         
-        static GameGroups()
+        static ArtGroups()
         {
-            Globals = new GameGroup("Global");
+            Globals = new ArtGroup("Global");
             Globals.CreateCategory("FeatureOverlays", Color.white, ref Globals.FeatureOverlays);
             Globals.CreateCategory("NavShapes", Color.white, ref Globals.NavShapes);
             Globals.CreateCategory("Traversal", Color.white, ref Globals.Traversal);
 
-            Gameplay = new GameGroup("Gameplay");
+            Gameplay = new ArtGroup("Gameplay");
             Gameplay.CreateCategory("ActorsSpawners", Color.white, ref Gameplay.ActorsSpawners);
             Gameplay.CreateCategory("Regions", Color.white, ref Gameplay.Regions);
             Gameplay.CreateCategory("Splines", Color.white, ref Gameplay.Splines);
 
-            Camera = new GameGroup("Camera");
+            Camera = new ArtGroup("Camera");
             Camera.CreateCategory("ActorsSpawners", Color.white, ref Camera.ActorsSpawners);
             Camera.CreateCategory("Regions", Color.white, ref Camera.Regions);
             Camera.CreateCategory("Splines", Color.white, ref Camera.Splines);
 
-            Sounds = new GameGroup("Sounds");
+            Sounds = new ArtGroup("Sounds");
             Sounds.CreateCategory("ActorsSpawners", Color.white, ref Sounds.ActorsSpawners);
             Sounds.CreateCategory("Regions", Color.white, ref Sounds.Regions);
             Sounds.CreateCategory("Splines", Color.white, ref Sounds.Splines);
 
-            Rendering = new GameGroup("Rendering");
+            Rendering = new ArtGroup("Rendering");
             Rendering.CreateCategory("ActorsSpawners", Color.white, ref Rendering.ActorsSpawners);
             Rendering.CreateCategory("Regions", Color.white, ref Rendering.Regions);
 
-            Partiles = new GameGroup("Particles");
-            Partiles.CreateCategory("ActorsSpawners", Color.white, ref Partiles.ActorsSpawners);
-            Partiles.CreateCategory("Regions", Color.white, ref Partiles.Regions);
-            Partiles.CreateCategory("Splines", Color.white, ref Partiles.Splines);
+            Particles = new ArtGroup("Particles");
+            Particles.CreateCategory("ActorsSpawners", Color.white, ref Particles.ActorsSpawners);
+            Particles.CreateCategory("Regions", Color.white, ref Particles.Regions);
+            Particles.CreateCategory("Splines", Color.white, ref Particles.Splines);
         }
+
     }
 }

@@ -45,17 +45,6 @@ namespace Plugins.VARP.VisibilityEditor
             return Layers[(int) gameLayer];
         }
         
-        public static void CountObjects()
-        {
-            if (Layers == null) return;
-            var counts = LayerTools.CountObjectsInAllLayers();
-            var min = Math.Min(counts.Length, Layers.Length);
-            for (var i = 0; i < min; i++)
-            {
-                var layer = Layers[i];
-                if (layer != null)
-                    layer.Quantity = counts[i];
-            }
-        }
+
     }
 }

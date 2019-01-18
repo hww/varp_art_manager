@@ -24,48 +24,38 @@
 
 using System.Collections.Generic;
 using UnityEngine;
-using VARP.OSC;
+
 
 namespace VARP.VisibilityEditor
 {
     /// <summary>
     /// Settings for single group. Each group contains several categories
     /// </summary>
-    public class GameGroup
+    public class ArtGroup
     {
         public string Name;
         
-        public readonly List<Category> Categories = new List<Category>();
+        public readonly List<ArtCategory> Categories = new List<ArtCategory>();
         
-        public Category ActorsSpawners;
-        public Category Regions;
-        public Category Splines;
-        public Category FeatureOverlays;
-        public Category NavShapes;
-        public Category Traversal;
-        public GameGroup(string groupName)
+        public ArtCategory ActorsSpawners;
+        public ArtCategory Regions;
+        public ArtCategory Splines;
+        public ArtCategory FeatureOverlays;
+        public ArtCategory NavShapes;
+        public ArtCategory Traversal;
+
+        public ArtGroup(string groupName)
         {
             Name = groupName;
         }
                 
-        public void CreateCategory(string categoryName, Color defaultColor, ref Category category)
+        public void CreateCategory(string categoryName, Color defaultColor, ref ArtCategory artCategory)
         {
-            category = new Category(Name, categoryName, defaultColor);
-            Categories.Add(category);
+            artCategory = new ArtCategory(Name, categoryName, defaultColor);
+            Categories.Add(artCategory);
         }
-        
-        public int Quantity
-        {
-            get
-            {
-                var quantity = 0;
-                var count = Categories.Count;
-                for (var i = 0; i < count; i++)
-                    quantity += Categories[i].Quantity;
-                return quantity;
-            }	
-        }
-        
+
+
         public bool IsVisible
         {
             get
@@ -86,6 +76,6 @@ namespace VARP.VisibilityEditor
                     Categories[i].IsVisible = value;
             }
         }
-        
+
     }
 }

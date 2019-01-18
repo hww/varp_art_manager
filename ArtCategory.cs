@@ -31,18 +31,17 @@ namespace VARP.VisibilityEditor
     /// <summary>
     /// Settings for single category
     /// </summary>
-    public class Category
+    public class ArtCategory
     {
         public string Name;
         public string GroupName;
-        public int Quantity;
 
         private readonly string visiblePreferenceName;
         private readonly string colorPreferenceNameR;
         private readonly string colorPreferenceNameG;
         private readonly string colorPreferenceNameB;
 
-        public Category(string groupName, string categoryName, Color defaultColor)
+        public ArtCategory(string groupName, string categoryName, Color defaultColor)
         {
             GroupName = groupName;
             Name = categoryName;

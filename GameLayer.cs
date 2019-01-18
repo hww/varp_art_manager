@@ -36,7 +36,6 @@ namespace VARP.VisibilityEditor
         public int Mask;
         public string Name;
 
-        public int Quantity;
 
         private readonly string colorPreferenceNameR;
         private readonly string colorPreferenceNameG;
@@ -55,7 +54,11 @@ namespace VARP.VisibilityEditor
 
         public bool IsLocked
         {
-            get => (Tools.lockedLayers & Mask) > 0;
+#if UNITY_EDITOR
+            get
+            {
+                return (Tools.lockedLayers & Mask) > 0;
+            }
             set
             {
                 if (value)
@@ -63,11 +66,19 @@ namespace VARP.VisibilityEditor
                 else
                     Tools.lockedLayers &= ~Mask;
             }
+#else
+            get;
+            set;
+#endif
         }
 
         public bool IsVisible
         {
-            get => (Tools.visibleLayers & Mask) > 0;
+#if UNITY_EDITOR
+            get
+            {
+                return (Tools.visibleLayers & Mask) > 0;
+            }
             set
             {
                 var was = Tools.visibleLayers;
@@ -79,6 +90,10 @@ namespace VARP.VisibilityEditor
                 if (was != Tools.visibleLayers)
                     SceneView.RepaintAll();
             }
+#else
+            get;
+            set;
+#endif
         }
 
         private Color color;
@@ -110,7 +125,7 @@ namespace VARP.VisibilityEditor
             var b = EditorPrefs.GetFloat(colorPreferenceNameR, defaultValue.b);
             return new Color(r, g, b);
 #else
-				return defaultValue;
+			return defaultValue;
 #endif
         }
     }

@@ -30,37 +30,18 @@ using UnityEngine;
 
 namespace VARP.VisibilityEditor.Editor
 {
-	public partial class LayersWindow : EditorWindow {
+	public class LayersWindow : EditorWindow {
 
 		[MenuItem("Window/Rocket/Layers")]
 		public static void ShowWindow ()
 		{
 			GetWindow<LayersWindow>("Rocket: Layers");
 		}
-	
-		private static Texture ArrowDownIcon;
-		private static Texture VisibleIcon;
-		private static Texture InvisibleIcon;
-		private static Texture LockIcon;
-		private static Texture UnlockIcon;
-		private static Texture LayerImage;
-		private static Texture RegionIcon;
-		private static Texture SplineIcon;
-		private static Texture CameraIcon;
-	 
-		private const float IconWidth = 28;
-		private const float IconHeight = 28;
-		private readonly GUILayoutOption IconWidthOption = GUILayout.Width(IconWidth);
-		private readonly GUILayoutOption IconHeightOption = GUILayout.Height(IconHeight);
-		private readonly GUILayoutOption LabelWidthOption = GUILayout.Width(200);
-		private readonly GUILayoutOption QuantityWidthOption = GUILayout.Width(50);
-		private readonly GUILayoutOption ColorWidthOption = GUILayout.Width(30);
-		private GUIStyle ButtonStyle;
-	
-		public static readonly LayerView[] LayerViews = new LayerView[32];
-		
-		void OnGUI ()
+
+		void OnEnable()
 		{
+			EditorApplication.hierarchyChanged -= CountObjects;
+			EditorApplication.hierarchyChanged += CountObjects;
 			if (ButtonStyle == null)
 			{
 				ButtonStyle = new GUIStyle();
@@ -87,11 +68,36 @@ namespace VARP.VisibilityEditor.Editor
 				if (layer!=null)
 					LayerViews[i] = new LayerView(layer, "Icons/layer");
 			}
-			GameLayers.CountObjects();
+			CountObjects();		
+		}
+	
+		private static Texture ArrowDownIcon;
+		private static Texture VisibleIcon;
+		private static Texture InvisibleIcon;
+		private static Texture LockIcon;
+		private static Texture UnlockIcon;
+		private static Texture LayerImage;
+		private static Texture RegionIcon;
+		private static Texture SplineIcon;
+		private static Texture CameraIcon;
+	 
+		private const float IconWidth = 28;
+		private const float IconHeight = 28;
+		private readonly GUILayoutOption IconWidthOption = GUILayout.Width(IconWidth);
+		private readonly GUILayoutOption IconHeightOption = GUILayout.Height(IconHeight);
+		private readonly GUILayoutOption LabelWidthOption = GUILayout.Width(200);
+		private readonly GUILayoutOption QuantityWidthOption = GUILayout.Width(50);
+		private readonly GUILayoutOption ColorWidthOption = GUILayout.Width(30);
+		private GUIStyle ButtonStyle;
+	
+		public static readonly LayerView[] LayerViews = new LayerView[32];
+		
+		void OnGUI ()
+		{
 			// -- render tool bar --
 			GUILayout.BeginHorizontal();
 			if (GUILayout.Button("Count Objects"))
-				GameLayers.CountObjects();
+				CountObjects();
 			GUILayout.EndHorizontal();
 
 			EditorGUILayout.HelpBox("Reserved by Unity layers", MessageType.None);
@@ -131,7 +137,7 @@ namespace VARP.VisibilityEditor.Editor
 			// -- 4 ---------------------------------------------------
 			GUILayout.Label(layer.Name, EditorStyles.largeLabel);
 			// -- 5 ---------------------------------------------------
-			GUILayout.Label(layer.Quantity.ToString(), EditorStyles.boldLabel, QuantityWidthOption);
+			GUILayout.Label(layerView.Quantity.ToString(), EditorStyles.boldLabel, QuantityWidthOption);
 		
 			GUILayout.EndHorizontal();
 		}
@@ -143,11 +149,24 @@ namespace VARP.VisibilityEditor.Editor
 		{
 			public Texture Icon;
 			public GameLayer Layer;
+			public int Quantity;
 			
 			public LayerView(GameLayer layer, string iconName)
 			{
 				Layer = layer;
 				Icon = Resources.Load<Texture>(iconName);
+			}
+		}
+		
+		public static void CountObjects()
+		{
+			if (LayerViews == null) return;
+			var counts = LayersTools.CountObjectsInAllLayers();
+			for (var i = 0; i < LayerViews.Length; i++)
+			{
+				var layer = LayerViews[i];
+				if (layer != null)
+					layer.Quantity = counts[i];
 			}
 		}
 	}

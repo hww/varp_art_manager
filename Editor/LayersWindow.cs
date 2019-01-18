@@ -28,7 +28,7 @@ using Plugins.VARP.VisibilityEditor;
 using UnityEditor;
 using UnityEngine;
 
-namespace VARP.VisibilityEditor.Editor
+namespace Plugins.VARP.VisibilityEditor.Editor
 {
 	public class LayersWindow : EditorWindow {
 

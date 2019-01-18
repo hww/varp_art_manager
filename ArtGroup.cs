@@ -26,7 +26,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 
-namespace VARP.VisibilityEditor
+namespace Plugins.VARP.VisibilityEditor
 {
     /// <summary>
     /// Settings for single group. Each group contains several categories

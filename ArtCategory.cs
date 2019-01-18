@@ -24,9 +24,8 @@
 
 using UnityEditor;
 using UnityEngine;
-using VARP.OSC;
 
-namespace VARP.VisibilityEditor
+namespace Plugins.VARP.VisibilityEditor
 {
     /// <summary>
     /// Settings for single category

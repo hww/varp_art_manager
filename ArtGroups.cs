@@ -26,7 +26,7 @@
 using UnityEngine;
 
 
-namespace VARP.VisibilityEditor
+namespace Plugins.VARP.VisibilityEditor
 {
     public static class ArtGroups
     {

@@ -25,7 +25,7 @@
 using UnityEditor;
 using UnityEngine;
 
-namespace VARP.VisibilityEditor
+namespace Plugins.VARP.VisibilityEditor
 {
     /// <summary>
     /// Representation for single layer

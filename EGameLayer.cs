@@ -22,7 +22,7 @@
 // SOFTWARE.
 // =============================================================================
 
-namespace VARP.VisibilityEditor
+namespace Plugins.VARP.VisibilityEditor
 {
     /// <summary>
     /// Edit this enum for your own project

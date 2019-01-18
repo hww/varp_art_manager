@@ -22,9 +22,7 @@
 // SOFTWARE.
 // =============================================================================
 
-using System;
 using UnityEngine;
-using VARP.VisibilityEditor;
 
 namespace Plugins.VARP.VisibilityEditor
 {

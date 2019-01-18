@@ -24,14 +24,12 @@
 
 using System;
 using System.Collections.Generic;
-using Plugins.VARP.VisibilityEditor;
+using Plugins.VARP.ArtPrimitives;
+using Plugins.VARP.Splines;
 using UnityEditor;
 using UnityEngine;
-using VARP.JSON;
-using VARP.Splines;
 
-
-namespace VARP.VisibilityEditor.Editor
+namespace Plugins.VARP.VisibilityEditor.Editor
 {
 	public class CategoriesWindow : EditorWindow {
 
@@ -116,7 +114,7 @@ namespace VARP.VisibilityEditor.Editor
 			RenderingGroup.PreCountArtObjects();
 			GameplayGroup.PreCountArtObjects();
             
-			var objects = FindObjectsOfType<ArtBehaviour>();
+			var objects = FindObjectsOfType<ArtPrimitive>();
             
 			for (var i = 0; i < objects.Length; i++)
 			{
@@ -134,7 +132,7 @@ namespace VARP.VisibilityEditor.Editor
 			GameplayGroup.PostCountArtObjects();
 		}
         
-		private void CountObject(ArtBehaviour obj)
+		private void CountObject(ArtPrimitive obj)
 		{
 			switch (obj.ArtGroup)
 			{
@@ -267,7 +265,7 @@ namespace VARP.VisibilityEditor.Editor
 				Categories[i].Quantity = 0;
 		}
             
-		public void CountArtObject(ArtBehaviour obj)
+		public void CountArtObject(ArtPrimitive obj)
 		{
 			if (obj is Spawner)
 				actorsSpawners.Quantity++;

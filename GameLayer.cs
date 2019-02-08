@@ -22,10 +22,12 @@
 // SOFTWARE.
 // =============================================================================
 
+#if UNITY_EDITOR
 using UnityEditor;
+#endif
 using UnityEngine;
 
-namespace Plugins.VARP.VisibilityEditor
+namespace VARP.VisibilityEditor
 {
     /// <summary>
     /// Representation for single layer

@@ -22,13 +22,10 @@
 // SOFTWARE.
 // =============================================================================
 
-using System;
-using System.Collections.Generic;
-using Plugins.VARP.VisibilityEditor;
 using UnityEditor;
 using UnityEngine;
 
-namespace Plugins.VARP.VisibilityEditor.Editor
+namespace VARP.VisibilityEditor.Editor
 {
 	public class LayersWindow : EditorWindow {
 

@@ -26,7 +26,7 @@ using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 
-namespace Plugins.VARP.VisibilityEditor.Editor
+namespace VARP.VisibilityEditor.Editor
 {
     public static class LayersTools
     {

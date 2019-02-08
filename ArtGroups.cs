@@ -23,10 +23,11 @@
 // =============================================================================
 
 
+using System;
 using UnityEngine;
 
 
-namespace Plugins.VARP.VisibilityEditor
+namespace VARP.VisibilityEditor
 {
     public static class ArtGroups
     {
@@ -55,37 +56,45 @@ namespace Plugins.VARP.VisibilityEditor
         /// </summary>
         public static ArtGroup Gameplay;
         
+        private static readonly ArtGroup[] groups = new ArtGroup[(int)EArtGroup.ArtGroupsCount];
+        private static bool isInitialized;
+        
         static ArtGroups()
         {
-            Globals = new ArtGroup("Global");
-            Globals.CreateCategory("FeatureOverlays", Color.white, ref Globals.FeatureOverlays);
-            Globals.CreateCategory("NavShapes", Color.white, ref Globals.NavShapes);
-            Globals.CreateCategory("Traversal", Color.white, ref Globals.Traversal);
-
-            Gameplay = new ArtGroup("Gameplay");
-            Gameplay.CreateCategory("ActorsSpawners", Color.white, ref Gameplay.ActorsSpawners);
-            Gameplay.CreateCategory("Regions", Color.white, ref Gameplay.Regions);
-            Gameplay.CreateCategory("Splines", Color.white, ref Gameplay.Splines);
-
-            Camera = new ArtGroup("Camera");
-            Camera.CreateCategory("ActorsSpawners", Color.white, ref Camera.ActorsSpawners);
-            Camera.CreateCategory("Regions", Color.white, ref Camera.Regions);
-            Camera.CreateCategory("Splines", Color.white, ref Camera.Splines);
-
-            Sounds = new ArtGroup("Sounds");
-            Sounds.CreateCategory("ActorsSpawners", Color.white, ref Sounds.ActorsSpawners);
-            Sounds.CreateCategory("Regions", Color.white, ref Sounds.Regions);
-            Sounds.CreateCategory("Splines", Color.white, ref Sounds.Splines);
-
-            Rendering = new ArtGroup("Rendering");
-            Rendering.CreateCategory("ActorsSpawners", Color.white, ref Rendering.ActorsSpawners);
-            Rendering.CreateCategory("Regions", Color.white, ref Rendering.Regions);
-
-            Particles = new ArtGroup("Particles");
-            Particles.CreateCategory("ActorsSpawners", Color.white, ref Particles.ActorsSpawners);
-            Particles.CreateCategory("Regions", Color.white, ref Particles.Regions);
-            Particles.CreateCategory("Splines", Color.white, ref Particles.Splines);
+            Initialize();
         }
 
+        public static void Initialize()
+        {
+            if (isInitialized) return;
+            isInitialized = true;
+            
+            Globals = CreateGroup(EArtGroup.Globals, Color.white);
+            Gameplay = CreateGroup(EArtGroup.Gameplay, Color.green);
+            Camera = CreateGroup(EArtGroup.Camera, Color.red);
+            Sounds = CreateGroup(EArtGroup.Sounds, Color.blue);
+            Rendering = CreateGroup(EArtGroup.Rendering, Color.magenta);
+            Particles = CreateGroup(EArtGroup.Particles, Color.magenta);
+        }
+
+        private static ArtGroup CreateGroup(EArtGroup egroup, Color color)
+        {
+            var group = new ArtGroup(egroup, color);
+            groups[(int)group.artGroup] = group;
+            return group;
+        }
+        
+        public static ArtGroup GetGroup(EArtGroup artGroup)
+        {
+            switch (artGroup)
+            {
+                case EArtGroup.Globals: return Globals;
+                case EArtGroup.Camera: return Camera;
+                case EArtGroup.Sounds: return Sounds;
+                case EArtGroup.Rendering: return Rendering;
+                case EArtGroup.Gameplay: return Gameplay;
+                default: throw new ArgumentOutOfRangeException();
+            }
+        }
     }
 }

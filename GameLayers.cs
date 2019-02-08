@@ -24,7 +24,7 @@
 
 using UnityEngine;
 
-namespace Plugins.VARP.VisibilityEditor
+namespace VARP.VisibilityEditor
 {
     public static class GameLayers
     {
@@ -42,7 +42,5 @@ namespace Plugins.VARP.VisibilityEditor
         {
             return Layers[(int) gameLayer];
         }
-        
-
     }
 }

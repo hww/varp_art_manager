@@ -22,21 +22,22 @@
 // SOFTWARE.
 // =============================================================================
 
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
 
-namespace Plugins.VARP.VisibilityEditor
+namespace VARP.VisibilityEditor
 {
     /// <summary>
     /// Settings for single group. Each group contains several categories
     /// </summary>
     public class ArtGroup
     {
-        public string Name;
+        public EArtGroup artGroup;
         
-        public readonly List<ArtCategory> Categories = new List<ArtCategory>();
-        
+        public readonly ArtCategory[] Categories = new ArtCategory[(int)EArtCategory.ArtCategoryCount];
+
         public ArtCategory ActorsSpawners;
         public ArtCategory Regions;
         public ArtCategory Splines;
@@ -44,23 +45,32 @@ namespace Plugins.VARP.VisibilityEditor
         public ArtCategory NavShapes;
         public ArtCategory Traversal;
 
-        public ArtGroup(string groupName)
+        public ArtGroup(EArtGroup group, Color color)
         {
-            Name = groupName;
+            artGroup = group;
+            FeatureOverlays = CreateCategory(EArtCategory.FeatureOverlays, color, true);
+            NavShapes = CreateCategory(EArtCategory.NavShapes, color, true);
+            Traversal = CreateCategory(EArtCategory.Traversal, color, true);
+            ActorsSpawners = CreateCategory(EArtCategory.ActorsSpawners, color, true);
+            Regions = CreateCategory(EArtCategory.Regions, color, true);
+            Splines = CreateCategory(EArtCategory.Splines, color, true);
         }
                 
-        public void CreateCategory(string categoryName, Color defaultColor, ref ArtCategory artCategory)
+        public ArtCategory CreateCategory(EArtCategory category, Color defaultColor, bool optional = false)
         {
-            artCategory = new ArtCategory(Name, categoryName, defaultColor);
-            Categories.Add(artCategory);
+            return Categories[(int)category] = new ArtCategory(artGroup, category, defaultColor, optional);
         }
 
-
+        public ArtCategory GetCategory(EArtCategory category)
+        {
+            return Categories[(int) category];
+        }
+        
         public bool IsVisible
         {
             get
             {
-                var count = Categories.Count;
+                var count = Categories.Length;
                 for (var i = 0; i < count; i++)
                 {
                     var category = Categories[i];
@@ -71,7 +81,7 @@ namespace Plugins.VARP.VisibilityEditor
             }
             set
             {
-                var count = Categories.Count;
+                var count = Categories.Length;
                 for (var i = 0; i < count; i++)
                     Categories[i].IsVisible = value;
             }

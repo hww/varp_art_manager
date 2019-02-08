@@ -22,32 +22,36 @@
 // SOFTWARE.
 // =============================================================================
 
+#if UNITY_EDITOR
 using UnityEditor;
+#endif
+
 using UnityEngine;
 
-namespace Plugins.VARP.VisibilityEditor
+namespace VARP.VisibilityEditor
 {
     /// <summary>
     /// Settings for single category
     /// </summary>
     public class ArtCategory
     {
-        public string Name;
-        public string GroupName;
-
+        public readonly EArtCategory artCategory;
+        public readonly bool isOptional;
         private readonly string visiblePreferenceName;
         private readonly string colorPreferenceNameR;
         private readonly string colorPreferenceNameG;
         private readonly string colorPreferenceNameB;
 
-        public ArtCategory(string groupName, string categoryName, Color defaultColor)
+        public ArtCategory(EArtGroup group, EArtCategory category, Color defaultColor, bool optional)
         {
-            GroupName = groupName;
-            Name = categoryName;
-            visiblePreferenceName = $"CategoriesWindowVisible{groupName}{categoryName}";
-            colorPreferenceNameR = $"CategoriesWindowColorR{groupName}{categoryName}";
-            colorPreferenceNameG = $"CategoriesWindowColorG{groupName}{categoryName}";
-            colorPreferenceNameB = $"CategoriesWindowColorB{groupName}{categoryName}";
+            isOptional = optional;
+            artCategory = category;
+            var artGroupName = group.ToString();
+            var categoryName = category.ToString();
+            visiblePreferenceName = $"CategoriesWindowVisible{artGroupName}{categoryName}";
+            colorPreferenceNameR = $"CategoriesWindowColorR{artGroupName}{categoryName}";
+            colorPreferenceNameG = $"CategoriesWindowColorG{artGroupName}{categoryName}";
+            colorPreferenceNameB = $"CategoriesWindowColorB{artGroupName}{categoryName}";
             isVisible = GetVisibleInternal(true);
             color = GetColorInternal(defaultColor);
         }
@@ -56,7 +60,7 @@ namespace Plugins.VARP.VisibilityEditor
 
         public bool IsVisible
         {
-            get { return isVisible; }
+            get => isVisible;
             set
             {
                 isVisible = value;
@@ -84,13 +88,18 @@ namespace Plugins.VARP.VisibilityEditor
 
         public Color Color
         {
-            get { return color; }
+            get => color;
             set
             {
                 color = value;
+                colorTransparent = value;
+                colorTransparent.a = 0.5f;
                 SetColorInternal(value);
             }
         }
+
+        private Color colorTransparent;
+        public Color ColorTransparent => colorTransparent;
 
         private Color GetColorInternal(Color defaultValue)
         {

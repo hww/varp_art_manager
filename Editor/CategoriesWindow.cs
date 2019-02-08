@@ -24,12 +24,11 @@
 
 using System;
 using System.Collections.Generic;
-using Plugins.VARP.ArtPrimitives;
-using Plugins.VARP.Splines;
+using VARP.ArtPrimitives;
 using UnityEditor;
 using UnityEngine;
 
-namespace Plugins.VARP.VisibilityEditor.Editor
+namespace VARP.VisibilityEditor.Editor
 {
 	public class CategoriesWindow : EditorWindow {
 
@@ -38,22 +37,17 @@ namespace Plugins.VARP.VisibilityEditor.Editor
 		private static Texture VisibleIcon;
 		private static Texture InvisibleIcon;
 	
-		private const float IconWidth = 22;
-		private const float IconHeight = 22;
-		private readonly GUILayoutOption IconWidthOption = GUILayout.Width(IconWidth);
-		private readonly GUILayoutOption IconHeightOption = GUILayout.Height(IconHeight);
-		private readonly GUILayoutOption LabelWidthOption = GUILayout.Width(200);
+		private const float ICON_WIDTH = 22;
+		private const float ICON_HEIGHT = 22;
+		private readonly GUILayoutOption IconWidthOption = GUILayout.Width(ICON_WIDTH);
+		private readonly GUILayoutOption IconHeightOption = GUILayout.Height(ICON_HEIGHT);
+		private readonly GUILayoutOption LabelWidhtOption = GUILayout.Width(200);
 		private readonly GUILayoutOption QuantityWidthOption = GUILayout.Width(50);
 		private readonly GUILayoutOption ColorWidthOption = GUILayout.Width(50);
 
-		private GroupView CameraGroup;
-		private GroupView PartilesGroup;
-		private GroupView SoundsGroup;
-		private GroupView GlobalsGroup;
-		private GroupView RenderingGroup;
-		private GroupView GameplayGroup;
 		private GUIStyle ButtonStyle;
-		
+		private GroupView[] GroupViews = new GroupView[(int)EArtGroup.ArtGroupsCount];
+				
 		[MenuItem("Window/Rocket/Categories")]
 		public static void ShowWindow ()
 		{
@@ -75,22 +69,32 @@ namespace Plugins.VARP.VisibilityEditor.Editor
 				VisibleIcon = Resources.Load<Texture>("Icons/visible");
 			if (InvisibleIcon == null)
 				InvisibleIcon = Resources.Load<Texture>("Icons/invisible");
-		
-			if (GlobalsGroup == null)
-				GlobalsGroup = new GroupView(ArtGroups.Globals, "Icons/envBall");
-			if (GameplayGroup == null)
-				GameplayGroup = new GroupView(ArtGroups.Gameplay, "Icons/pacman");
-			if (CameraGroup == null)
-				CameraGroup = new GroupView(ArtGroups.Camera, "Icons/camera");
-			if (SoundsGroup == null)
-				SoundsGroup = new GroupView(ArtGroups.Sounds, "Icons/sound");
-			if (RenderingGroup == null)
-				RenderingGroup = new GroupView(ArtGroups.Rendering, "Icons/rendering");
-			if (PartilesGroup == null)
-				PartilesGroup = new GroupView(ArtGroups.Particles, "Icons/particle");
+			
+			ArtGroups.Initialize();
+			
+			CreateGroupView(ArtGroups.Globals, "Icons/envBall");
+			CreateGroupView(ArtGroups.Gameplay, "Icons/pacman");
+			CreateGroupView(ArtGroups.Camera, "Icons/camera");
+			CreateGroupView(ArtGroups.Sounds, "Icons/sound");
+			CreateGroupView(ArtGroups.Rendering, "Icons/rendering");
+			CreateGroupView(ArtGroups.Particles, "Icons/particle");
 			CountObjects();
 		}
-	
+
+		private GroupView CreateGroupView(ArtGroup artGroup, string iconName)
+		{
+			var groupView = new GroupView(ArtGroups.Globals, iconName);	
+			
+			GroupViews[(int)artGroup.artGroup] = groupView;
+			return groupView;
+		}
+		
+		private void OnDisable()
+		{
+			for (var i = 0; i < GroupViews.Length; i++)
+				GroupViews[i] = null;
+		}
+
 		void OnGUI ()
 		{
 			// -- render tool bar --
@@ -98,21 +102,14 @@ namespace Plugins.VARP.VisibilityEditor.Editor
 			if (GUILayout.Button("Count Objects"))
 				CountObjects();
 			GUILayout.EndHorizontal();
-			RenderGroup(GlobalsGroup);
-			RenderGroup(GameplayGroup);
-			RenderGroup(CameraGroup);
-			RenderGroup(SoundsGroup);
-			RenderGroup(RenderingGroup);
-			RenderGroup(PartilesGroup);
+			for (var i = 0; i < GroupViews.Length; i++)
+				RenderGroup(GroupViews[i]);
 		}
 	
 		private void CountObjects()
 		{
-			CameraGroup.PreCountArtObjects();
-			GlobalsGroup.PreCountArtObjects();
-			GlobalsGroup.PreCountArtObjects();
-			RenderingGroup.PreCountArtObjects();
-			GameplayGroup.PreCountArtObjects();
+			for (var i = 0; i < GroupViews.Length; i++)
+				GroupViews[i].PreCountArtObjects();
             
 			var objects = FindObjectsOfType<ArtPrimitive>();
             
@@ -125,37 +122,20 @@ namespace Plugins.VARP.VisibilityEditor.Editor
 			}
 			
 			// now update counters of all groups
-			CameraGroup.PostCountArtObjects();
-			GlobalsGroup.PostCountArtObjects();
-			GlobalsGroup.PostCountArtObjects();
-			RenderingGroup.PostCountArtObjects();
-			GameplayGroup.PostCountArtObjects();
+			for (var i = 0; i < GroupViews.Length; i++)
+				GroupViews[i].PostCountArtObjects();
 		}
         
 		private void CountObject(ArtPrimitive obj)
 		{
-			switch (obj.ArtGroup)
-			{
-				case EArtGroup.Camera:
-					CameraGroup.CountArtObject(obj);
-					break;
-				case EArtGroup.Sounds:
-					GlobalsGroup.CountArtObject(obj);
-					break;
-				case EArtGroup.Globals:
-					GlobalsGroup.CountArtObject(obj);
-					break;
-				case EArtGroup.Rendering:
-					RenderingGroup.CountArtObject(obj);
-					break;
-				case EArtGroup.Gameplay:
-					GameplayGroup.CountArtObject(obj);
-					break;
-				default:
-					throw new ArgumentOutOfRangeException();
-			}
+			var group = GetGroup(obj.artGroup);
+			group.CountArtObject(obj);
 		}
-
+		
+		private GroupView GetGroup(EArtGroup artGroup)
+		{
+			return GroupViews[(int) artGroup];
+		}
 
 		/// <summary>
 		/// Settings for single group
@@ -165,7 +145,7 @@ namespace Plugins.VARP.VisibilityEditor.Editor
 			var group = groupView.artGroup;
 			GUILayout.BeginHorizontal();
 			// -- 0 ---------------------------------------------------
-			GUILayout.Box(groupView.Icon, ButtonStyle, IconWidthOption, IconHeightOption);
+			GUILayout.Box(groupView.icon, ButtonStyle, IconWidthOption, IconHeightOption);
 			// -- 1 ---------------------------------------------------
 			var isVisible = group.IsVisible;
 			if (GUILayout.Button( isVisible ? VisibleIcon : InvisibleIcon, ButtonStyle, IconWidthOption, IconHeightOption))
@@ -173,15 +153,20 @@ namespace Plugins.VARP.VisibilityEditor.Editor
 			// -- 2 ---------------------------------------------------
 			GUILayout.Box("", ButtonStyle, IconWidthOption, IconHeightOption);
 			// -- 3 ---------------------------------------------------
-			GUILayout.Label(group.Name, EditorStyles.boldLabel);
+			GUILayout.Label(group.artGroup.ToString(), EditorStyles.boldLabel);
 			// -- 4 ---------------------------------------------------
 			GUILayout.Label(groupView.Quantity.ToString(), EditorStyles.boldLabel, QuantityWidthOption);
 			GUILayout.EndHorizontal();
 
-			var categories = groupView.Categories;
-			var count = categories.Count;
-			for (var i=0; i<count; i++)
-				RenderCategory(categories[i]);
+			var categories = groupView.categories;
+			var count = categories.Length;
+			for (var i = 0; i < count; i++)
+			{
+				var category = categories[i];
+				if (category.isOptional && category.quantity == 0)
+					continue;
+				RenderCategory(category);
+			}
 		
 			GUILayout.Box("", new GUILayoutOption[]{GUILayout.ExpandWidth(true), GUILayout.Height(1)});
 		}
@@ -192,8 +177,7 @@ namespace Plugins.VARP.VisibilityEditor.Editor
 		/// </summary>
 		private void RenderCategory(CategoryView categoryView)
 		{
-			var category = categoryView.artCategory;
-			var isVisible = category.IsVisible;
+			var category = categoryView.category;
 
 			GUILayout.BeginHorizontal();
 			// -- 0 ---------------------------------------------------
@@ -202,11 +186,11 @@ namespace Plugins.VARP.VisibilityEditor.Editor
 			if (GUILayout.Button(category.IsVisible ? VisibleIcon : InvisibleIcon, ButtonStyle, IconWidthOption, IconHeightOption))
 				category.IsVisible = !category.IsVisible;
 			// -- 2 ---------------------------------------------------
-			GUILayout.Box(categoryView.Icon, ButtonStyle, IconWidthOption, IconHeightOption);
+			GUILayout.Box(categoryView.icon, ButtonStyle, IconWidthOption, IconHeightOption);
 			// -- 3 ---------------------------------------------------
-			GUILayout.Label(category.Name, EditorStyles.largeLabel);
+			GUILayout.Label(category.artCategory.ToString(), EditorStyles.largeLabel);
 			// -- 4 ---------------------------------------------------
-			GUILayout.Label(categoryView.Quantity.ToString(), EditorStyles.boldLabel, QuantityWidthOption);
+			GUILayout.Label(categoryView.quantity.ToString(), EditorStyles.boldLabel, QuantityWidthOption);
 		
 			GUILayout.EndHorizontal();
 		}
@@ -218,8 +202,8 @@ namespace Plugins.VARP.VisibilityEditor.Editor
 	/// </summary>
 	public class GroupView
 	{
-		public readonly Texture Icon;
-		public readonly List<CategoryView> Categories = new List<CategoryView>();
+		public readonly Texture icon;
+		public readonly CategoryView[] categories = new CategoryView[(int)EArtCategory.ArtCategoryCount];
 		public readonly ArtGroup artGroup;
 		public int Quantity;
 		
@@ -234,66 +218,68 @@ namespace Plugins.VARP.VisibilityEditor.Editor
 		{
 			Debug.Assert(artGroup != null);
 			this.artGroup = artGroup;
-			Icon = Resources.Load<Texture>(iconName);
+			icon = Resources.Load<Texture>(iconName);
 			
-			if (artGroup.FeatureOverlays != null)
-				featureOverlays = CreateCategoryView(artGroup.FeatureOverlays, "Icons/overlay");
-			if (artGroup.NavShapes != null)
-				navShapes = CreateCategoryView(artGroup.NavShapes, "Icons/navigation");
-			if (artGroup.Traversal != null)
-				traversal = CreateCategoryView(artGroup.Traversal, "Icons/actor");
-			if (artGroup.ActorsSpawners != null)
-				actorsSpawners = CreateCategoryView(artGroup.ActorsSpawners, "Icons/actor");
-			if (artGroup.Regions != null)
-				regions = CreateCategoryView(artGroup.Regions, "Icons/region");
-			if (artGroup.Splines != null)
-				splines = CreateCategoryView(artGroup.Splines, "Icons/spline");
+			featureOverlays = CreateCategoryView(artGroup.FeatureOverlays, "Icons/overlay");
+			navShapes = CreateCategoryView(artGroup.NavShapes, "Icons/navigation");
+			traversal = CreateCategoryView(artGroup.Traversal, "Icons/actor");
+			actorsSpawners = CreateCategoryView(artGroup.ActorsSpawners, "Icons/actor");
+			regions = CreateCategoryView(artGroup.Regions, "Icons/region");
+			splines = CreateCategoryView(artGroup.Splines, "Icons/spline");
 		}
 
 		private CategoryView CreateCategoryView(ArtCategory artCategory, string iconName)
 		{
-			Debug.Assert(artCategory != null);
+			if (artCategory == null)
+				return null;
 			var categoryView = new CategoryView(artCategory, iconName);
-			Categories.Add(categoryView);
+			categories[(int)categoryView.category.artCategory] = categoryView;
 			return categoryView;
 		}
 		
 		        
 		public void PreCountArtObjects()
 		{
-			for (var i = 0; i < Categories.Count; i++)
-				Categories[i].Quantity = 0;
+			for (var i = 0; i < categories.Length; i++)
+				categories[i].quantity = 0;
 		}
-            
+		
 		public void CountArtObject(ArtPrimitive obj)
 		{
-			if (obj is Spawner)
-				actorsSpawners.Quantity++;
-			else if (obj is BezierSpline)
-				splines.Quantity++;
-			//TODO!
-			//else if (obj is Spawner)
-			//	featureOverlays.Quantity++;
-			//else if (obj is Spawner)
-			//	navShapes.Quantity++;
-			//else if (obj is Spawner)
-			//	traversal.Quantity++;
-			//else if (obj is Spawner)
-			//	actorsSpawners.Quantity++;
-			//else if (obj is Spawner)
-			//	regions.Quantity++;
-
+			switch (obj.artCategory)
+			{
+				case EArtCategory.ActorsSpawners:
+					actorsSpawners.quantity++;
+					break;
+				case EArtCategory.NavShapes:
+					navShapes.quantity++;
+					break;
+				case EArtCategory.Splines:
+					splines.quantity++;
+					break;
+				case EArtCategory.Regions:
+					regions.quantity++;
+					break;
+				case EArtCategory.Traversal:
+					traversal.quantity++;
+					break;
+				case EArtCategory.FeatureOverlays:
+					featureOverlays.quantity++;
+					break;
+				default:
+					throw new ArgumentOutOfRangeException();
+			}
 		}
 
 		public void PostCountArtObjects()
 		{
 			Quantity = 0;
-			var count = Categories.Count;
+			var count = categories.Length;
 			for (var i = 0; i < count; i++)
 			{
-				var category = Categories[i];
+				var category = categories[i];
 				if (category != null)
-					Quantity += category.Quantity;
+					Quantity += category.quantity;
 			}
 		}
 	}
@@ -303,15 +289,16 @@ namespace Plugins.VARP.VisibilityEditor.Editor
 	/// </summary>
 	public  class CategoryView
 	{
-		public readonly Texture Icon;
-		public readonly ArtCategory artCategory;
-		public int Quantity;
+		public readonly Texture icon;
+		public readonly ArtCategory category;
+		public readonly bool isOptional;
+		public int quantity;
 		
-		public CategoryView(ArtCategory artCategory, string iconName)
+		public CategoryView(ArtCategory category, string iconName)
 		{
-			Debug.Assert(artCategory != null);
-			this.artCategory = artCategory;
-			Icon = Resources.Load<Texture>(iconName);
+			this.category = category;
+			isOptional = category.isOptional;
+			icon = Resources.Load<Texture>(iconName);
 		}
 	}
 }

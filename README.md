@@ -70,12 +70,12 @@ The line and fill colors will be used from category or from layers panel, depend
 
 ## Access to layer settings
 
-The GameLayers class contains settings for layers
+The ArtLayers class contains settings for layers
 
 ```C#
 public class ArtGroup
 {
-      public static readonly GameLayer[] Layers = new ArtLayer[32];
+      public static readonly ArtLayer[] Layers = new ArtLayer[32];
 }
 ```
 

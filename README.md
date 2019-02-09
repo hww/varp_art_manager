@@ -51,11 +51,16 @@ public class ArtGroup
 Example of using
 
 ```C#
-void OnDrawGizmos()
+private void OnDrawGizmos()
 {
-      var category = ArtGroups.Gameplay.ActorSpawners;
-      if (category.IsVisible)
-            Gizmos.DrawBox(transform.position, Vector.one, category.Color);
+    var category = GetArtCategory();
+    if (category.IsVisible)
+    {
+        var lineColor = category.GetLineColor(gameObject.layer);
+        var fillColor = category.GetFillColor(gameObject.layer);
+        VarpGizmos.Cylinder3D(transform.position, transform.rotation, 1f, zoneRadius, GizmoDrawAxis.Y, fillColor, lineColor);
+        VarpGizmos.Label(transform.position, lineColor, LabelPivot.MIDDLE_CENTER, LabelAlignment.CENTER, name, 100);
+    }
 }
 ```
 

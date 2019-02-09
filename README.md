@@ -75,7 +75,7 @@ The GameLayers class contains settings for layers
 ```C#
 public class ArtGroup
 {
-      public static readonly GameLayer[] Layers = new GameLayer[32];
+      public static readonly GameLayer[] Layers = new ArtLayer[32];
 }
 ```
 

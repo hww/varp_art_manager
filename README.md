@@ -64,6 +64,10 @@ private void OnDrawGizmos()
 }
 ```
 
+The line and fill colors will be used from category or from layers panel, depends on checkbox "User Layer Colors"
+
+![Layers Window](/Documentation/layers_window_colors.png)
+
 ## Access to layer settings
 
 The GameLayers class contains settings for layers

@@ -58,7 +58,7 @@ namespace VARP.VisibilityEditor.Editor
 				LayerImage = Resources.Load<Texture>("Icons/layer");
 
 			// -- initialize all layers --
-			var layers = GameLayers.Layers;
+			var layers = ArtLayers.Layers;
 			for (var i = 0; i < layers.Length; i++)
 			{
 				var layer = layers[i];
@@ -95,6 +95,7 @@ namespace VARP.VisibilityEditor.Editor
 			GUILayout.BeginHorizontal();
 			if (GUILayout.Button("Count Objects"))
 				CountObjects();
+			ArtLayers.ApplyColors = GUILayout.Toggle(ArtLayers.ApplyColors, "Use Layer Colors");
 			GUILayout.EndHorizontal();
 
 			EditorGUILayout.HelpBox("Reserved by Unity layers", MessageType.None);
@@ -145,10 +146,10 @@ namespace VARP.VisibilityEditor.Editor
 		public class LayerView
 		{
 			public Texture Icon;
-			public GameLayer Layer;
+			public ArtLayer Layer;
 			public int Quantity;
 			
-			public LayerView(GameLayer layer, string iconName)
+			public LayerView(ArtLayer layer, string iconName)
 			{
 				Layer = layer;
 				Icon = Resources.Load<Texture>(iconName);

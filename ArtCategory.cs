@@ -28,7 +28,7 @@ using UnityEditor;
 
 using UnityEngine;
 
-namespace VARP.VisibilityEditor
+namespace VARP.VisibilityEditor 
 {
     /// <summary>
     /// Settings for single category
@@ -92,14 +92,14 @@ namespace VARP.VisibilityEditor
             set
             {
                 color = value;
-                colorTransparent = value;
-                colorTransparent.a = 0.5f;
+                fillColor = value;
+                fillColor.a = 0.5f;
                 SetColorInternal(value);
             }
         }
 
-        private Color colorTransparent;
-        public Color ColorTransparent => colorTransparent;
+        private Color fillColor;
+        public Color FillColor => fillColor;
 
         private Color GetColorInternal(Color defaultValue)
         {
@@ -120,6 +120,27 @@ namespace VARP.VisibilityEditor
             EditorPrefs.SetFloat(colorPreferenceNameG, value.g);
             EditorPrefs.SetFloat(colorPreferenceNameB, value.b);
 #endif
+        }
+
+
+        public Color GetLineColor(int gameObjectLayer)
+        {
+            if (ArtLayers.applyLayersColors)
+            {
+                var layer = ArtLayers.GetLayer(gameObjectLayer);
+                return layer.Color;
+            }
+            return Color;
+        }
+
+        public Color GetFillColor(int gameObjectLayer)
+        {
+            if (ArtLayers.applyLayersColors)
+            {
+                var layer = ArtLayers.GetLayer(gameObjectLayer);
+                return layer.FillColor;
+            }
+            return FillColor;
         }
     }
 }

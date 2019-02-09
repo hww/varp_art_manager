@@ -22,25 +22,57 @@
 // SOFTWARE.
 // =============================================================================
 
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
 using UnityEngine;
 
 namespace VARP.VisibilityEditor
 {
-    public static class GameLayers
+    public static class ArtLayers
     {
-        public static readonly GameLayer[] Layers = new GameLayer[32];
-        
-        static GameLayers()
+        public static readonly ArtLayer[] Layers = new ArtLayer[32];
+        public static bool applyLayersColors;
+
+        static ArtLayers()
         {
             // -- initialize all layers --
             var layersValues = System.Enum.GetValues(typeof(EGameLayer));
             foreach (var layer in layersValues)
-                Layers[(int)layer] = new GameLayer((int)layer, ((EGameLayer)layer).ToString(), Color.white);
+                Layers[(int)layer] = new ArtLayer((int)layer, ((EGameLayer)layer).ToString(), Color.white);
         }
 
-        public static GameLayer GetLayer(EGameLayer gameLayer)
+        public static ArtLayer GetLayer(EGameLayer gameLayer)
         {
             return Layers[(int) gameLayer];
+        }
+        
+        public static ArtLayer GetLayer(int gameLayer)
+        {
+            return Layers[gameLayer];
+        }
+
+
+        const string applyLayersColorsParamName = "ArtLayers.applyLayersColors";
+        public static bool ApplyColors
+        {
+            get
+            {
+#if UNITY_EDITOR
+                return EditorPrefs.GetBool(applyLayersColorsParamName);
+#else    
+                return false;
+#endif
+            }
+            set
+            {
+#if UNITY_EDITOR
+                applyLayersColors = value;
+                EditorPrefs.SetBool(applyLayersColorsParamName, applyLayersColors);
+#else
+
+#endif
+            }
         }
     }
 }

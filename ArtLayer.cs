@@ -22,6 +22,8 @@
 // SOFTWARE.
 // =============================================================================
 
+
+using UnityEditor.ShaderGraph;
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
@@ -32,7 +34,7 @@ namespace VARP.VisibilityEditor
     /// <summary>
     /// Representation for single layer
     /// </summary>
-    public class GameLayer
+    public class ArtLayer
     {
         public int Index;
         public int Mask;
@@ -43,7 +45,7 @@ namespace VARP.VisibilityEditor
         private readonly string colorPreferenceNameG;
         private readonly string colorPreferenceNameB;
 
-        public GameLayer(int index, string name, Color defaultColor)
+        public ArtLayer(int index, string name, Color defaultColor)
         {
             Name = name;
             Index = index;
@@ -102,12 +104,22 @@ namespace VARP.VisibilityEditor
 
         public Color Color
         {
-            get { return color; }
+            get => color;
             set
             {
                 if (color != value) SetColorInternal(value);
                 color = value;
+                fillColor = value;
+                fillColor.a = 0.5f;
             }
+        }
+
+        private Color fillColor;
+        
+        public Color FillColor
+        {
+            get => fillColor;
+            set => fillColor = value;
         }
 
         private void SetColorInternal(Color value)

@@ -42,5 +42,6 @@ namespace VARP.VisibilityEditor
         PostProcessing,
         Target,
         TargetFill,
+        NotCollidable    // used by claw main collider
     }
 }

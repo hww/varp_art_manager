@@ -4,7 +4,7 @@ Simple Unity editor extension for managing visibility of layers and categories o
 
 ## ArtPrimitive Class
 
-The example of ArtPrimitive class below. This class allow to mark object as the one on art category
+The example of ArtPrimitive class below. This class associate the game object with one of art groups and categories.
 
 ```C#
 public class ArtPrimitive : MonoBehaviour

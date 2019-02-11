@@ -23,7 +23,6 @@
 // =============================================================================
 
 
-using UnityEditor.ShaderGraph;
 #if UNITY_EDITOR
 using UnityEditor;
 #endif

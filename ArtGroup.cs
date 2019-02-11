@@ -22,8 +22,6 @@
 // SOFTWARE.
 // =============================================================================
 
-using System;
-using System.Collections.Generic;
 using UnityEngine;
 
 
@@ -36,7 +34,7 @@ namespace VARP.VisibilityEditor
     {
         public EArtGroup artGroup;
         
-        public readonly ArtCategory[] Categories = new ArtCategory[(int)EArtCategory.ArtCategoryCount];
+        public readonly ArtCategory[] Categories = new ArtCategory[(int)EArtCategory.Count];
 
         public ArtCategory ActorsSpawners;
         public ArtCategory Regions;

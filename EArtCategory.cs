@@ -32,6 +32,6 @@ namespace VARP.VisibilityEditor
         Regions,
         Traversal,
         FeatureOverlays,
-        ArtCategoryCount
+        Count
     }
 }

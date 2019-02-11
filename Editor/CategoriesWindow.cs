@@ -83,8 +83,7 @@ namespace VARP.VisibilityEditor.Editor
 
 		private GroupView CreateGroupView(ArtGroup artGroup, string iconName)
 		{
-			var groupView = new GroupView(ArtGroups.Globals, iconName);	
-			
+			var groupView = new GroupView(artGroup, iconName);	
 			GroupViews[(int)artGroup.artGroup] = groupView;
 			return groupView;
 		}
@@ -203,7 +202,7 @@ namespace VARP.VisibilityEditor.Editor
 	public class GroupView
 	{
 		public readonly Texture icon;
-		public readonly CategoryView[] categories = new CategoryView[(int)EArtCategory.ArtCategoryCount];
+		public readonly CategoryView[] categories = new CategoryView[(int)EArtCategory.Count];
 		public readonly ArtGroup artGroup;
 		public int Quantity;
 		

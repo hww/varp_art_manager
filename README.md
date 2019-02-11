@@ -1,6 +1,28 @@
 # VARP Visibility Editor
 
-Simple Unity editor extension for managing visibility of layers and categories of objects.
+Simple Unity editor extension for managing visibility of layers and categories of objects. 
+
+## ArtPrimitive Class
+
+The example of ArtPrimitive class below. This class allow to mark object as the one on art category
+
+```C#
+public class ArtPrimitive : MonoBehaviour
+{
+    public EArtGroup artGroup;        // Select the art group of this object
+    public EArtCategory artCategory;  // Select the art group of this object
+
+    public ArtGroup GetArtGroup()
+    {
+        return ArtGroups.GetGroup(artGroup);
+    }
+    
+    public ArtCategory GetArtCategory()
+    {
+        return ArtGroups.GetGroup(artGroup).GetCategory(artCategory);
+    }
+}
+```
 
 ## Edit Layers Visibility
 

@@ -10,7 +10,7 @@ The example of ArtPrimitive class below. This class associate the game object wi
 public class ArtPrimitive : MonoBehaviour
 {
     public EArtGroup artGroup;        // Select the art group of this object
-    public EArtCategory artCategory;  // Select the art group of this object
+    public EArtCategory artCategory;  // Select the art category of this object
 
     public ArtGroup GetArtGroup()
     {

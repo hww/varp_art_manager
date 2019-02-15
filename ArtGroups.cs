@@ -26,73 +26,89 @@
 using System;
 using UnityEngine;
 
-
 namespace VARP.VisibilityEditor
 {
     public static class ArtGroups
     {
         /// <summary>
-        /// Specialized for camera management
+        ///     Specialized for camera management
         /// </summary>
         public static ArtGroup Camera;
+
         /// <summary>
-        /// Specialized for particles and effects management
+        ///     Specialized for particles and effects management
         /// </summary>
         public static ArtGroup Particles;
+
         /// <summary>
-        /// Specialized for sounds and listeners management
+        ///     Specialized for sounds and listeners management
         /// </summary>
         public static ArtGroup Sounds;
+
         /// <summary>
-        /// Not fit to any group
+        ///     Not fit to any group
         /// </summary>
         public static ArtGroup Globals;
+
         /// <summary>
-        /// Specialized for GUI, Rendering, Lighting, and PostFX 
+        ///     Specialized for GUI, Rendering, Lighting, and PostFX
         /// </summary>
         public static ArtGroup Rendering;
+
         /// <summary>
-        /// Specialized for game play behaviour
+        ///     Specialized for game play behaviour
         /// </summary>
         public static ArtGroup Gameplay;
-        
-        private static readonly ArtGroup[] groups = new ArtGroup[(int)EArtGroup.ArtGroupsCount];
+
+        private static readonly ArtGroup[] groups = new ArtGroup[(int) ArtGroupTag.ArtGroupsCount];
         private static bool isInitialized;
-        
+
+        /// <summary>
+        ///     Static constructor
+        /// </summary>
         static ArtGroups()
         {
             Initialize();
         }
 
+        /// <summary>
+        ///     Initialize all groups
+        /// </summary>
         public static void Initialize()
         {
             if (isInitialized) return;
             isInitialized = true;
-            
-            Globals = CreateGroup(EArtGroup.Globals, Color.white);
-            Gameplay = CreateGroup(EArtGroup.Gameplay, Color.green);
-            Camera = CreateGroup(EArtGroup.Camera, Color.red);
-            Sounds = CreateGroup(EArtGroup.Sounds, Color.blue);
-            Rendering = CreateGroup(EArtGroup.Rendering, Color.magenta);
-            Particles = CreateGroup(EArtGroup.Particles, Color.magenta);
+
+            Globals = CreateGroup(ArtGroupTag.Globals, Color.white);
+            Gameplay = CreateGroup(ArtGroupTag.GamePlay, Color.green);
+            Camera = CreateGroup(ArtGroupTag.Camera, Color.red);
+            Sounds = CreateGroup(ArtGroupTag.Sounds, Color.blue);
+            Rendering = CreateGroup(ArtGroupTag.Rendering, Color.magenta);
+            Particles = CreateGroup(ArtGroupTag.Particles, Color.magenta);
         }
 
-        private static ArtGroup CreateGroup(EArtGroup egroup, Color color)
+        private static ArtGroup CreateGroup(ArtGroupTag egroup, Color color)
         {
             var group = new ArtGroup(egroup, color);
-            groups[(int)group.artGroup] = group;
+            groups[(int) group.artGroupTag] = group;
             return group;
         }
-        
-        public static ArtGroup GetGroup(EArtGroup artGroup)
+
+        /// <summary>
+        /// Get art group
+        /// </summary>
+        /// <param name="artGroupTag"></param>
+        /// <returns></returns>
+        /// <exception cref="ArgumentOutOfRangeException"></exception>
+        public static ArtGroup GetGroup(ArtGroupTag artGroupTag)
         {
-            switch (artGroup)
+            switch (artGroupTag)
             {
-                case EArtGroup.Globals: return Globals;
-                case EArtGroup.Camera: return Camera;
-                case EArtGroup.Sounds: return Sounds;
-                case EArtGroup.Rendering: return Rendering;
-                case EArtGroup.Gameplay: return Gameplay;
+                case ArtGroupTag.Globals: return Globals;
+                case ArtGroupTag.Camera: return Camera;
+                case ArtGroupTag.Sounds: return Sounds;
+                case ArtGroupTag.Rendering: return Rendering;
+                case ArtGroupTag.GamePlay: return Gameplay;
                 default: throw new ArgumentOutOfRangeException();
             }
         }

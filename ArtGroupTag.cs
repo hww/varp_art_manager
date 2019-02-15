@@ -24,24 +24,14 @@
 
 namespace VARP.VisibilityEditor
 {
-    /// <summary>
-    /// Edit this enum for your own project
-    /// </summary>
-    public enum EGameLayer
+    public enum ArtGroupTag
     {
-        // BUILTIN LAYERS
-        Default,
-        TransparentFX,
-        IgnoreRayCast,
-        BuiltinLayer3,
-        Water,
-        UI,
-        BuiltinLayer6,
-        BuiltinLayer7,
-        // GAME LAYERS
-        PostProcessing,
-        Target,
-        TargetFill,
-        NotCollidable    // used by claw main collider
+        Globals,
+        Camera,
+        Sounds,
+        Rendering,
+        GamePlay,
+        Particles,
+        ArtGroupsCount
     }
 }

@@ -46,7 +46,7 @@ namespace VARP.VisibilityEditor.Editor
 		private readonly GUILayoutOption ColorWidthOption = GUILayout.Width(50);
 
 		private GUIStyle ButtonStyle;
-		private GroupView[] GroupViews = new GroupView[(int)EArtGroup.ArtGroupsCount];
+		private GroupView[] GroupViews = new GroupView[(int)ArtGroupTag.ArtGroupsCount];
 				
 		[MenuItem("Window/Rocket/Categories")]
 		public static void ShowWindow ()
@@ -84,7 +84,7 @@ namespace VARP.VisibilityEditor.Editor
 		private GroupView CreateGroupView(ArtGroup artGroup, string iconName)
 		{
 			var groupView = new GroupView(artGroup, iconName);	
-			GroupViews[(int)artGroup.artGroup] = groupView;
+			GroupViews[(int)artGroup.artGroupTag] = groupView;
 			return groupView;
 		}
 		
@@ -127,13 +127,13 @@ namespace VARP.VisibilityEditor.Editor
         
 		private void CountObject(ArtPrimitive obj)
 		{
-			var group = GetGroup(obj.artGroup);
+			var group = GetGroup(obj.artGroupTag);
 			group.CountArtObject(obj);
 		}
 		
-		private GroupView GetGroup(EArtGroup artGroup)
+		private GroupView GetGroup(ArtGroupTag artGroupTag)
 		{
-			return GroupViews[(int) artGroup];
+			return GroupViews[(int) artGroupTag];
 		}
 
 		/// <summary>
@@ -152,7 +152,7 @@ namespace VARP.VisibilityEditor.Editor
 			// -- 2 ---------------------------------------------------
 			GUILayout.Box("", ButtonStyle, IconWidthOption, IconHeightOption);
 			// -- 3 ---------------------------------------------------
-			GUILayout.Label(group.artGroup.ToString(), EditorStyles.boldLabel);
+			GUILayout.Label(group.artGroupTag.ToString(), EditorStyles.boldLabel);
 			// -- 4 ---------------------------------------------------
 			GUILayout.Label(groupView.Quantity.ToString(), EditorStyles.boldLabel, QuantityWidthOption);
 			GUILayout.EndHorizontal();
@@ -187,7 +187,7 @@ namespace VARP.VisibilityEditor.Editor
 			// -- 2 ---------------------------------------------------
 			GUILayout.Box(categoryView.icon, ButtonStyle, IconWidthOption, IconHeightOption);
 			// -- 3 ---------------------------------------------------
-			GUILayout.Label(category.artCategory.ToString(), EditorStyles.largeLabel);
+			GUILayout.Label(category.artCategoryTag.ToString(), EditorStyles.largeLabel);
 			// -- 4 ---------------------------------------------------
 			GUILayout.Label(categoryView.quantity.ToString(), EditorStyles.boldLabel, QuantityWidthOption);
 		
@@ -202,7 +202,7 @@ namespace VARP.VisibilityEditor.Editor
 	public class GroupView
 	{
 		public readonly Texture icon;
-		public readonly CategoryView[] categories = new CategoryView[(int)EArtCategory.Count];
+		public readonly CategoryView[] categories = new CategoryView[(int)ArtCategoryTag.Count];
 		public readonly ArtGroup artGroup;
 		public int Quantity;
 		
@@ -232,7 +232,7 @@ namespace VARP.VisibilityEditor.Editor
 			if (artCategory == null)
 				return null;
 			var categoryView = new CategoryView(artCategory, iconName);
-			categories[(int)categoryView.category.artCategory] = categoryView;
+			categories[(int)categoryView.category.artCategoryTag] = categoryView;
 			return categoryView;
 		}
 		
@@ -245,24 +245,24 @@ namespace VARP.VisibilityEditor.Editor
 		
 		public void CountArtObject(ArtPrimitive obj)
 		{
-			switch (obj.artCategory)
+			switch (obj.artCategoryTag)
 			{
-				case EArtCategory.ActorsSpawners:
+				case ArtCategoryTag.ActorsSpawners:
 					actorsSpawners.quantity++;
 					break;
-				case EArtCategory.NavShapes:
+				case ArtCategoryTag.NavShapes:
 					navShapes.quantity++;
 					break;
-				case EArtCategory.Splines:
+				case ArtCategoryTag.Splines:
 					splines.quantity++;
 					break;
-				case EArtCategory.Regions:
+				case ArtCategoryTag.Regions:
 					regions.quantity++;
 					break;
-				case EArtCategory.Traversal:
+				case ArtCategoryTag.Traversal:
 					traversal.quantity++;
 					break;
-				case EArtCategory.FeatureOverlays:
+				case ArtCategoryTag.FeatureOverlays:
 					featureOverlays.quantity++;
 					break;
 				default:

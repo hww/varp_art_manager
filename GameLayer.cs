@@ -24,14 +24,27 @@
 
 namespace VARP.VisibilityEditor
 {
-    public enum EArtCategory
+    /// <summary>
+    /// Edit this enum for your own project
+    /// </summary>
+    public enum GameLayer
     {
-        ActorsSpawners,
-        NavShapes,
-        Splines,
-        Regions,
-        Traversal,
-        FeatureOverlays,
-        Count
+        // -- BUILTIN LAYERS --
+        Default,
+        TransparentFX,
+        IgnoreRayCast,
+        BuiltinLayer3,
+        Water,
+        UI,
+        BuiltinLayer6,
+        BuiltinLayer7,
+        
+        // -- GAME LAYERS (Define here layers of your game) --
+        PostProcessing,
+        Target,
+        TargetFill,
+        NotCollidable,
+        ClawModel,
+        ClawCollideWithTargets
     }
 }

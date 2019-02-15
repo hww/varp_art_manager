@@ -31,23 +31,30 @@ using UnityEngine;
 namespace VARP.VisibilityEditor 
 {
     /// <summary>
-    /// Settings for single category
+    ///     Settings for single category
     /// </summary>
     public class ArtCategory
     {
-        public readonly EArtCategory artCategory;
+        public readonly ArtCategoryTag artCategoryTag;
         public readonly bool isOptional;
         private readonly string visiblePreferenceName;
         private readonly string colorPreferenceNameR;
         private readonly string colorPreferenceNameG;
         private readonly string colorPreferenceNameB;
 
-        public ArtCategory(EArtGroup group, EArtCategory category, Color defaultColor, bool optional)
+        /// <summary>
+        ///     Construct new category
+        /// </summary>
+        /// <param name="groupTag">Parent group</param>
+        /// <param name="categoryTag">Category tag</param>
+        /// <param name="defaultColor"></param>
+        /// <param name="optional"></param>
+        public ArtCategory(ArtGroupTag groupTag, ArtCategoryTag categoryTag, Color defaultColor, bool optional)
         {
             isOptional = optional;
-            artCategory = category;
-            var artGroupName = group.ToString();
-            var categoryName = category.ToString();
+            artCategoryTag = categoryTag;
+            var artGroupName = groupTag.ToString();
+            var categoryName = categoryTag.ToString();
             visiblePreferenceName = $"CategoriesWindowVisible{artGroupName}{categoryName}";
             colorPreferenceNameR = $"CategoriesWindowColorR{artGroupName}{categoryName}";
             colorPreferenceNameG = $"CategoriesWindowColorG{artGroupName}{categoryName}";
@@ -58,6 +65,9 @@ namespace VARP.VisibilityEditor
         
         private bool isVisible;
 
+        /// <summary>
+        ///     Is this category visible
+        /// </summary>
         public bool IsVisible
         {
             get => isVisible;
@@ -86,6 +96,9 @@ namespace VARP.VisibilityEditor
 
         private Color color;
 
+        /// <summary>
+        /// Get category color
+        /// </summary>
         public Color Color
         {
             get => color;
@@ -99,6 +112,10 @@ namespace VARP.VisibilityEditor
         }
 
         private Color fillColor;
+        
+        /// <summary>
+        /// Get category fill color. Usually same as color but more transparent
+        /// </summary>
         public Color FillColor => fillColor;
 
         private Color GetColorInternal(Color defaultValue)
@@ -122,7 +139,12 @@ namespace VARP.VisibilityEditor
 #endif
         }
 
-
+        
+        /// <summary>
+        ///     Get color in case if this object in given layer
+        /// </summary>
+        /// <param name="gameObjectLayer"></param>
+        /// <returns></returns>
         public Color GetLineColor(int gameObjectLayer)
         {
             if (ArtLayers.applyLayersColors)
@@ -133,6 +155,12 @@ namespace VARP.VisibilityEditor
             return Color;
         }
 
+        
+        /// <summary>
+        ///     Get fill color if the object is in given layer
+        /// </summary>
+        /// <param name="gameObjectLayer"></param>
+        /// <returns></returns>
         public Color GetFillColor(int gameObjectLayer)
         {
             if (ArtLayers.applyLayersColors)

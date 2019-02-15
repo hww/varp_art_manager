@@ -32,10 +32,9 @@ namespace VARP.VisibilityEditor
     /// </summary>
     public class ArtGroup
     {
-        public EArtGroup artGroup;
+        public readonly ArtCategory[] Categories = new ArtCategory[(int)ArtCategoryTag.Count];
         
-        public readonly ArtCategory[] Categories = new ArtCategory[(int)EArtCategory.Count];
-
+        public ArtGroupTag artGroupTag;
         public ArtCategory ActorsSpawners;
         public ArtCategory Regions;
         public ArtCategory Splines;
@@ -43,27 +42,41 @@ namespace VARP.VisibilityEditor
         public ArtCategory NavShapes;
         public ArtCategory Traversal;
 
-        public ArtGroup(EArtGroup group, Color color)
+        
+        /// <summary>
+        ///     Construct new art group
+        /// </summary>
+        /// <param name="groupTag"></param>
+        /// <param name="color"></param>
+        public ArtGroup(ArtGroupTag groupTag, Color color)
         {
-            artGroup = group;
-            FeatureOverlays = CreateCategory(EArtCategory.FeatureOverlays, color, true);
-            NavShapes = CreateCategory(EArtCategory.NavShapes, color, true);
-            Traversal = CreateCategory(EArtCategory.Traversal, color, true);
-            ActorsSpawners = CreateCategory(EArtCategory.ActorsSpawners, color, true);
-            Regions = CreateCategory(EArtCategory.Regions, color, true);
-            Splines = CreateCategory(EArtCategory.Splines, color, true);
+            artGroupTag = groupTag;
+            FeatureOverlays = CreateCategory(ArtCategoryTag.FeatureOverlays, color, true);
+            NavShapes = CreateCategory(ArtCategoryTag.NavShapes, color, true);
+            Traversal = CreateCategory(ArtCategoryTag.Traversal, color, true);
+            ActorsSpawners = CreateCategory(ArtCategoryTag.ActorsSpawners, color, true);
+            Regions = CreateCategory(ArtCategoryTag.Regions, color, true);
+            Splines = CreateCategory(ArtCategoryTag.Splines, color, true);
         }
                 
-        public ArtCategory CreateCategory(EArtCategory category, Color defaultColor, bool optional = false)
+        private ArtCategory CreateCategory(ArtCategoryTag categoryTag, Color defaultColor, bool optional = false)
         {
-            return Categories[(int)category] = new ArtCategory(artGroup, category, defaultColor, optional);
+            return Categories[(int)categoryTag] = new ArtCategory(artGroupTag, categoryTag, defaultColor, optional);
         }
 
-        public ArtCategory GetCategory(EArtCategory category)
+        /// <summary>
+        ///     Get category in this group
+        /// </summary>
+        /// <param name="categoryTag"></param>
+        /// <returns></returns>
+        public ArtCategory GetCategory(ArtCategoryTag categoryTag)
         {
-            return Categories[(int) category];
+            return Categories[(int) categoryTag];
         }
         
+        /// <summary>
+        ///     Is this group visible or not
+        /// </summary>
         public bool IsVisible
         {
             get

@@ -24,14 +24,14 @@
 
 namespace VARP.VisibilityEditor
 {
-    public enum EArtGroup
+    public enum ArtCategoryTag
     {
-        Globals,
-        Camera,
-        Sounds,
-        Rendering,
-        Gameplay,
-        Particles,
-        ArtGroupsCount
+        ActorsSpawners,
+        NavShapes,
+        Splines,
+        Regions,
+        Traversal,
+        FeatureOverlays,
+        Count
     }
 }

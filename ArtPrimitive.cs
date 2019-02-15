@@ -22,67 +22,41 @@
 // SOFTWARE.
 // =============================================================================
 
-#if UNITY_EDITOR
-using System;
-using UnityEditor;
-#endif
-using System;
+using NaughtyAttributes;
+using VARP.VisibilityEditor;
 using UnityEngine;
 
-namespace VARP.VisibilityEditor
+namespace VARP.ArtPrimitives
 {
-    public static class ArtLayers
+    /// <summary>
+    ///     This class allow to mark object as the one on art category
+    /// </summary>
+    public class ArtPrimitive : MonoBehaviour
     {
-        private const string applyLayersColorsParamName = "ArtLayers.applyLayersColors";
-        public static readonly ArtLayer[] Layers = new ArtLayer[32];
-        public static bool applyLayersColors;
-
-        static ArtLayers()
-        {
-            // -- initialize all layers --
-            var layersValues = Enum.GetValues(typeof(GameLayer));
-            foreach (var layer in layersValues)
-                Layers[(int) layer] = new ArtLayer((int) layer, ((GameLayer) layer).ToString(), Color.white);
-        }
-
-        public static bool ApplyColors
-        {
-            get
-            {
-#if UNITY_EDITOR
-                return EditorPrefs.GetBool(applyLayersColorsParamName);
-#else
-                return false;
-#endif
-            }
-            set
-            {
-#if UNITY_EDITOR
-                applyLayersColors = value;
-                EditorPrefs.SetBool(applyLayersColorsParamName, applyLayersColors);
-#else
-#endif
-            }
-        }
-
+        // Select the art group of this object
+        [BoxGroup("Art Primitive")]
+        public ArtGroupTag artGroupTag;
+        // Select the art group of this object
+        [BoxGroup("Art Primitive")]
+        public ArtCategoryTag artCategoryTag;
+        
         /// <summary>
-        ///     Get art layer by tag
+        ///     Get group of this primitive
         /// </summary>
-        /// <param name="gameLayer"></param>
         /// <returns></returns>
-        public static ArtLayer GetLayer(GameLayer gameLayer)
+        public ArtGroup GetArtGroup()
         {
-            return Layers[(int) gameLayer];
+            return ArtGroups.GetGroup(artGroupTag);
         }
-
+        
         /// <summary>
-        ///     Get art layer by integer index (same at is in Unity)
+        ///     Get category of this primitive
         /// </summary>
-        /// <param name="gameLayer"></param>
         /// <returns></returns>
-        public static ArtLayer GetLayer(int gameLayer)
+        public ArtCategory GetArtCategory()
         {
-            return Layers[gameLayer];
+            return ArtGroups.GetGroup(artGroupTag).GetCategory(artCategoryTag);
         }
     }
+    
 }

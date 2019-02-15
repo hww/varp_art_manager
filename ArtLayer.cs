@@ -31,7 +31,7 @@ using UnityEngine;
 namespace VARP.VisibilityEditor
 {
     /// <summary>
-    /// Representation for single layer
+    ///     Representation for single layer
     /// </summary>
     public class ArtLayer
     {
@@ -39,11 +39,16 @@ namespace VARP.VisibilityEditor
         public int Mask;
         public string Name;
 
-
         private readonly string colorPreferenceNameR;
         private readonly string colorPreferenceNameG;
         private readonly string colorPreferenceNameB;
 
+        /// <summary>
+        ///     Construct new layer
+        /// </summary>
+        /// <param name="index"></param>
+        /// <param name="name"></param>
+        /// <param name="defaultColor"></param>
         public ArtLayer(int index, string name, Color defaultColor)
         {
             Name = name;
@@ -55,6 +60,9 @@ namespace VARP.VisibilityEditor
             Color = GetColorInternal(defaultColor);
         }
 
+        /// <summary>
+        ///     Is this layer locked
+        /// </summary>
         public bool IsLocked
         {
 #if UNITY_EDITOR
@@ -75,6 +83,9 @@ namespace VARP.VisibilityEditor
 #endif
         }
 
+        /// <summary>
+        ///     Is this layer visible
+        /// </summary>
         public bool IsVisible
         {
 #if UNITY_EDITOR
@@ -101,6 +112,10 @@ namespace VARP.VisibilityEditor
 
         private Color color;
 
+        
+        /// <summary>
+        ///     Get color of this layer
+        /// </summary>
         public Color Color
         {
             get => color;
@@ -115,6 +130,9 @@ namespace VARP.VisibilityEditor
 
         private Color fillColor;
         
+        /// <summary>
+        ///     Get fill color of this layer. Usually same as color but more transparent
+        /// </summary>
         public Color FillColor
         {
             get => fillColor;

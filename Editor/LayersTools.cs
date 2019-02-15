@@ -33,7 +33,11 @@ namespace VARP.VisibilityEditor.Editor
         // ====================================================================
         // Statistics
         // ====================================================================
-        
+
+        /// <summary>
+        ///     Count objects on all layers 
+        /// </summary>
+        /// <returns></returns>
         public static int[] CountObjectsInAllLayers()
         {
             var counts = new int[32];
@@ -41,36 +45,38 @@ namespace VARP.VisibilityEditor.Editor
             CountObjectsInAllLayers(root, counts);
             return counts;
         }
-        
+
+        /// <summary>
+        ///     Count objects on all layers, but start this given roots
+        /// </summary>
+        /// <param name="root"></param>
+        /// <param name="counts"></param>
+        /// <returns></returns>
         private static int CountObjectsInAllLayers(GameObject[] root, int[] counts)
         {
             var count = 0;
-            foreach (GameObject t in root)
-            {
+            foreach (var t in root)
                 if (t.hideFlags == HideFlags.None)
                     counts[t.layer]++;
-            }
             return count;
         }
 
         // ====================================================================
         // Selecting
         // ====================================================================
-        
+
         private static void SelectObjectsInLayer(int layerIndex)
         {
             var root = Resources.FindObjectsOfTypeAll<GameObject>();
             SelectObjectsInLayer(root, layerIndex);
         }
-        
+
         private static void SelectObjectsInLayer(GameObject[] root, int layerIndex)
         {
-            List<GameObject> Selected = new List<GameObject>();
-            foreach (GameObject t in root)
-            {
+            var Selected = new List<GameObject>();
+            foreach (var t in root)
                 if (t.layer == layerIndex && t.hideFlags == HideFlags.None)
                     Selected.Add(t);
-            }
             Selection.objects = Selected.ToArray();
         }
 
@@ -82,12 +88,10 @@ namespace VARP.VisibilityEditor.Editor
 
         private static void SelectObjectsByLayerMask(GameObject[] root, int layerMask)
         {
-            List<GameObject> Selected = new List<GameObject>();
-            foreach (GameObject t in root)
-            {
+            var Selected = new List<GameObject>();
+            foreach (var t in root)
                 if (t.hideFlags == HideFlags.None && ((1 << t.layer) & layerMask) > 0)
                     Selected.Add(t);
-            }
             Selection.objects = Selected.ToArray();
         }
     }
